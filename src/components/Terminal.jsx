@@ -8,8 +8,14 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     { type: 'system', content: 'Type "help" to see available commands.' },
     { type: 'prompt', content: '$ ' }
   ]);
+  const [theme, setTheme] = useState(isDarkMode ? 'dark' : 'light');
   const inputRef = useRef(null);
   const historyRef = useRef(null);
+
+  // Update theme when isDarkMode changes
+  useEffect(() => {
+    setTheme(isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
 
   // Portfolio data for terminal commands
   const data = {
@@ -379,29 +385,35 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     };
   }, []);
 
-  // Get terminal styles based on dark mode
+  // Get terminal styles based on theme
   const getTerminalStyles = () => {
-    return isDarkMode ? {
-      bg: 'bg-gray-900',
-      text: 'text-green-400',
-      header: 'bg-gray-800 border-gray-700',
-      prompt: 'text-green-400',
-      commandText: 'text-white',
-      systemText: 'text-blue-400',
-      outputText: 'text-green-400',
-      errorText: 'text-red-500',
-      border: 'border-gray-700'
-    } : {
-      bg: 'bg-gray-900',
-      text: 'text-green-400',
-      header: 'bg-gray-800 border-gray-700',
-      prompt: 'text-green-400',
-      commandText: 'text-white',
-      systemText: 'text-blue-400',
-      outputText: 'text-green-400',
-      errorText: 'text-red-500',
-      border: 'border-gray-700'
-    };
+    switch (theme) {
+      case 'light':
+        return {
+          bg: 'bg-white',
+          text: 'text-gray-800',
+          header: 'bg-gray-100 border-gray-300',
+          prompt: 'text-blue-600',
+          commandText: 'text-gray-800',
+          systemText: 'text-blue-600',
+          outputText: 'text-gray-800',
+          errorText: 'text-red-600',
+          border: 'border-gray-300'
+        };
+      case 'dark':
+      default:
+        return {
+          bg: 'bg-gray-900',
+          text: 'text-green-400',
+          header: 'bg-gray-800 border-gray-700',
+          prompt: 'text-green-400',
+          commandText: 'text-white',
+          systemText: 'text-blue-400',
+          outputText: 'text-green-400',
+          errorText: 'text-red-500',
+          border: 'border-gray-700'
+        };
+    }
   };
 
   const styles = getTerminalStyles();
@@ -426,7 +438,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
                   <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
-                <span>Terminal - DRK Portfolio</span>
+                <span>Terminal - DRK Portfolio ({theme} mode)</span>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
@@ -462,7 +474,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   className={`flex-1 ${styles.bg} border-none outline-none ${styles.text} font-mono pl-1`}
-                  style={{ caretColor: '#4ade80' }}
+                  style={{ caretColor: theme === 'light' ? '#2563eb' : '#4ade80' }}
                   spellCheck="false"
                   autoCapitalize="none"
                   autoComplete="off"
