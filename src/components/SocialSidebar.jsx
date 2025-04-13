@@ -28,7 +28,7 @@ export const SocialSidebar = ({ isDarkMode }) => {
       </a>
       
       <a 
-        href="https://github.com/deepakreddy22" 
+        href="https://github.com/deepakreddy21" 
         target="_blank" 
         rel="noopener noreferrer"
         className={`flex items-center justify-center w-10 h-10 rounded-full ${isDarkMode ? 'bg-black hover:text-purple-400' : 'bg-white hover:text-purple-600'} shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}

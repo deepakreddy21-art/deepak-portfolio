@@ -71,8 +71,8 @@ export const Terminal = ({ isDarkMode, portfolioData }) => {
       }
     ],
     contact: {
-      email: "dkilaru@hawk.iit.edu",
-      github: "github.com/deepakreddy22",
+      email: "deepakreddyiitc1234@gmail.com",
+      github: "github.com/deepakreddy21",
       linkedin: "linkedin.com/in/deepak-reddy-3a911924b",
       instagram: "instagram.com/deepakreddy_22",
       twitter: "twitter.com/kdr_9837"

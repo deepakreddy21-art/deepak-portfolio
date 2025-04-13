@@ -116,7 +116,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
     socialMedia: {
       instagram: "deepakreddy_22",
       linkedin: "deepak-reddy-3a911924b",
-      github: "deepakreddy22",
+      github: "deepakreddy21",
       twitter: "kdr_9837"
     }
   };
