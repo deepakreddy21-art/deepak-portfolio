@@ -22,7 +22,7 @@ This is my personal portfolio website built using React, Vite, and TailwindCSS. 
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/deepakreddy21/deepak-portfolio.git
+   git clone https://github.com/deepakreddy22/deepak-portfolio.git
    cd deepak-portfolio
    ```
 
