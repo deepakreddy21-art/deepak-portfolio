@@ -63,7 +63,7 @@ function App() {
         <SocialSidebar isDarkMode={isDarkMode} />
         <ThemeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
         <AIChatBubble isDarkMode={isDarkMode} />
-        <Terminal isDarkMode={isDarkMode} />
+        <Terminal isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
         
         {/* Home Section */}
         <Home isDarkMode={isDarkMode} />
