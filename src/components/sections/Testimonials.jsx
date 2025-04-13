@@ -45,7 +45,7 @@ export const Testimonials = ({ isDarkMode }) => {
   ];
 
   return (
-    <section id="testimonials" className={`pt-1 pb-12 md:pt-1 md:pb-20 px-4 relative ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
+    <section id="skills" className={`pt-1 pb-12 md:pt-1 md:pb-20 px-4 relative ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
       <div className={`absolute inset-0 ${isDarkMode ? 'bg-black' : 'bg-white'} opacity-100`}></div>
       <div className="max-w-6xl mx-auto relative z-10">
         <RevealOnScroll>
