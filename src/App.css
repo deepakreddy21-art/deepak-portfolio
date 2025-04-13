@@ -1,0 +1,6 @@
+:root {
+  scroll-padding-top: 0.25cm; /* Further reduced space between the navbar and the section when scrolling to an anchor */
+  scroll-behavior: smooth; /* Ensures smooth scrolling for anchor navigation */
+}
+
+/* The About Me section will preserve its existing padding through specific styling in the Home component */
