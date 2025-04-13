@@ -82,7 +82,7 @@ The AI chatbot can answer questions about my background, skills, and projects. T
 
 ## Contact
 
-- Email: dkilaru@hawk.iit.edu
+- Email: deepakreddyiitc1234@gmail.com
 - LinkedIn: linkedin.com/in/deepak-reddy-3a911924b
 - GitHub: github.com/deepakreddy22
 - Instagram: instagram.com/deepakreddy_22

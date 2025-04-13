@@ -146,8 +146,8 @@ export const AIChatBubble = ({ isDarkMode }) => {
       `Deepak's work experience includes:\n\n• ${portfolioContent.workExperience[0].position} at ${portfolioContent.workExperience[0].company} (${portfolioContent.workExperience[0].duration})\n  - ${portfolioContent.workExperience[0].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[1].position} at ${portfolioContent.workExperience[1].company} (${portfolioContent.workExperience[1].duration})\n  - ${portfolioContent.workExperience[1].responsibilities.join('\n  - ')}\n\nWould you like to know more about a specific role?`,
     ],
     contact: [
-      "You can contact Deepak directly at dkilaru@hawk.iit.edu. Do you need any other information?",
-      "Deepak's email is dkilaru@hawk.iit.edu. Feel free to reach out to him directly!"
+      "You can contact Deepak directly at deepakreddyiitc1234@gmail.com. Do you need any other information?",
+      "Deepak's email is deepakreddyiitc1234@gmail.com. Feel free to reach out to him directly!"
     ],
     resume: [
       "I'd be happy to help you get Deepak's resume! You can download it directly using the button below.",
@@ -158,9 +158,9 @@ export const AIChatBubble = ({ isDarkMode }) => {
       `For the Real-time Collaborative Editor, Deepak used:\n• Frontend: React\n• Backend: Node.js\n• Real-time communication: WebSockets\n• Database: MongoDB\n• Caching: Redis`
     ],
     default: [
-      "That's an interesting question! While I'm just a simple bot, Deepak would be happy to discuss this with you. You can reach him at dkilaru@hawk.iit.edu.",
-      "Great question! Deepak would love to talk more about this. His email is dkilaru@hawk.iit.edu if you'd like to contact him directly.",
-      "I'm not sure I understand perfectly, but you can reach Deepak at dkilaru@hawk.iit.edu for more information."
+      "That's an interesting question! While I'm just a simple bot, Deepak would be happy to discuss this with you. You can reach him at deepakreddyiitc1234@gmail.com.",
+      "Great question! Deepak would love to talk more about this. His email is deepakreddyiitc1234@gmail.com if you'd like to contact him directly.",
+      "I'm not sure I understand perfectly, but you can reach Deepak at deepakreddyiitc1234@gmail.com for more information."
     ],
     goodbye: [
       "It was great chatting with you! Feel free to reach out anytime you have more questions about Deepak's work.",
@@ -442,7 +442,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
                 const errorResponse = { 
                   id: messages.length + 1, 
                 type: 'bot', 
-                  text: "I'm sorry, there was an error sending your message. Please try again later or contact Deepak directly at dkilaru@hawk.iit.edu."
+                  text: "I'm sorry, there was an error sending your message. Please try again later or contact Deepak directly at deepakreddyiitc1234@gmail.com."
               };
                 setMessages(prev => [...prev, errorResponse]);
               
