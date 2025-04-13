@@ -109,7 +109,6 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'output', content: '  search [keyword]  - Search portfolio content' },
           { type: 'output', content: '  stats             - Display portfolio statistics' },
           { type: 'output', content: '  email             - Show email contact or open mailto link' },
-          { type: 'output', content: '  sudo hire-me      - Special command :)' },
           { type: 'output', content: '  exit              - Close the terminal' }
         ];
       }
@@ -275,26 +274,6 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
         }
         
         return output;
-      }
-    },
-    'sudo': {
-      description: 'Sudo command',
-      execute: (args) => {
-        if (args === 'hire-me') {
-          return [
-            { type: 'system', content: '🎉 EXCELLENT DECISION DETECTED 🎉' },
-            { type: 'output', content: 'Initiating hiring protocol...' },
-            { type: 'output', content: 'Preparing workspace...' },
-            { type: 'output', content: 'Configuring developer environment...' },
-            { type: 'output', content: 'Adding to team chat...' },
-            { type: 'system', content: 'CONGRATULATIONS!' },
-            { type: 'output', content: 'You\'ve successfully recognized talent when you see it!' },
-            { type: 'output', content: 'For the formal hiring process, please contact me at:' },
-            { type: 'output', content: `Email: ${data.contact.email}` },
-            { type: 'output', content: `LinkedIn: ${data.contact.linkedin}` }
-          ];
-        }
-        return [{ type: 'error', content: 'sudo: command not found. Did you mean "sudo hire-me"?' }];
       }
     },
     'stats': {
