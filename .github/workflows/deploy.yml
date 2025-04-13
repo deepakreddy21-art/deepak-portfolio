@@ -10,6 +10,11 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  deployments: write
+  issues: read
+  packages: read
+  pull-requests: write
+  statuses: write
 
 jobs:
   build-and-deploy:
