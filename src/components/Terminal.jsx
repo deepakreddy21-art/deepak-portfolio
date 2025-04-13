@@ -8,8 +8,6 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     { type: 'system', content: 'Type "help" to see available commands.' },
     { type: 'prompt', content: '$ ' }
   ]);
-  const [currentDirectory, setCurrentDirectory] = useState('~');
-  const [theme, setTheme] = useState(isDarkMode ? 'dark' : 'light');
   const inputRef = useRef(null);
   const historyRef = useRef(null);
 
@@ -102,9 +100,6 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'output', content: '  help              - Show this help message' },
           { type: 'output', content: '  clear             - Clear terminal screen' },
           { type: 'output', content: '  ls                - List available sections' },
-          { type: 'output', content: '  pwd               - Print working directory' },
-          { type: 'output', content: '  cd [directory]    - Change directory' },
-          { type: 'output', content: '  cat [file]        - Display file content' },
           { type: 'output', content: '  skills            - List all skills by category' },
           { type: 'output', content: '  projects          - List all projects' },
           { type: 'output', content: '  experience        - Show work experience' },
@@ -112,7 +107,6 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'output', content: '  whoami            - Display personal profile' },
           { type: 'output', content: '  download resume   - Download resume file' },
           { type: 'output', content: '  search [keyword]  - Search portfolio content' },
-          { type: 'output', content: '  theme [option]    - Change terminal theme (light/dark/hacker)' },
           { type: 'output', content: '  stats             - Display portfolio statistics' },
           { type: 'output', content: '  email             - Show email contact or open mailto link' },
           { type: 'output', content: '  sudo hire-me      - Special command :)' },
@@ -130,121 +124,9 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     ls: {
       description: 'List available sections',
       execute: (args) => {
-        if (currentDirectory === '~') {
-          return [
-            { type: 'output', content: 'skills/     projects/     experience/     contact/' }
-          ];
-        } else if (currentDirectory === '~/skills') {
-          return [
-            { type: 'output', content: 'frontend.txt     backend.txt     devops.txt     cloud.txt     databases.txt' }
-          ];
-        } else if (currentDirectory === '~/projects') {
-          const projectList = data.projects.map(project => `${project.name.toLowerCase().replace(/\s+/g, '-')}.txt`).join('     ');
-          return [
-            { type: 'output', content: projectList }
-          ];
-        } else if (currentDirectory === '~/experience') {
-          const experienceList = data.experience.map(exp => `${exp.company.toLowerCase().replace(/\s+/g, '-')}.txt`).join('     ');
-          return [
-            { type: 'output', content: experienceList }
-          ];
-        } else if (currentDirectory === '~/contact') {
-          return [
-            { type: 'output', content: 'email.txt     github.txt     linkedin.txt     instagram.txt     twitter.txt' }
-          ];
-        }
-        return [{ type: 'error', content: 'No such directory: ' + currentDirectory }];
-      }
-    },
-    pwd: {
-      description: 'Print working directory',
-      execute: () => {
-        return [{ type: 'output', content: currentDirectory }];
-      }
-    },
-    cd: {
-      description: 'Change directory',
-      execute: (args) => {
-        if (!args || args === '~' || args === '/') {
-          setCurrentDirectory('~');
-          return [{ type: 'output', content: 'Changed directory to: ~' }];
-        }
-        
-        if (args === '..') {
-          if (currentDirectory === '~') {
-            return [{ type: 'output', content: 'Already at home directory' }];
-          }
-          setCurrentDirectory('~');
-          return [{ type: 'output', content: 'Changed directory to: ~' }];
-        }
-        
-        const validDirectories = ['skills', 'projects', 'experience', 'contact'];
-        const targetDir = args.replace('~/', '');
-        
-        if (validDirectories.includes(targetDir)) {
-          setCurrentDirectory(`~/${targetDir}`);
-          return [{ type: 'output', content: `Changed directory to: ~/${targetDir}` }];
-        }
-        
-        return [{ type: 'error', content: `cd: no such directory: ${args}` }];
-      }
-    },
-    cat: {
-      description: 'Display file content',
-      execute: (args) => {
-        if (!args) {
-          return [{ type: 'error', content: 'cat: missing file operand' }];
-        }
-        
-        // Handle skill files
-        if (currentDirectory === '~/skills') {
-          const skillType = args.replace('.txt', '');
-          if (data.skills[skillType]) {
-            return [
-              { type: 'system', content: `${skillType.toUpperCase()} SKILLS:` },
-              { type: 'output', content: data.skills[skillType].join(', ') }
-            ];
-          }
-        }
-        
-        // Handle project files
-        if (currentDirectory === '~/projects') {
-          const projectName = args.replace('.txt', '').replace(/-/g, ' ');
-          const project = data.projects.find(p => p.name.toLowerCase() === projectName);
-          if (project) {
-            return [
-              { type: 'system', content: project.name.toUpperCase() },
-              { type: 'output', content: project.description },
-              { type: 'output', content: `Technologies: ${project.technologies.join(', ')}` }
-            ];
-          }
-        }
-        
-        // Handle experience files
-        if (currentDirectory === '~/experience') {
-          const companyName = args.replace('.txt', '').replace(/-/g, ' ');
-          const experience = data.experience.find(e => e.company.toLowerCase() === companyName);
-          if (experience) {
-            return [
-              { type: 'system', content: experience.company.toUpperCase() },
-              { type: 'output', content: `Position: ${experience.position}` },
-              { type: 'output', content: `Period: ${experience.period}` }
-            ];
-          }
-        }
-        
-        // Handle contact files
-        if (currentDirectory === '~/contact') {
-          const contactType = args.replace('.txt', '');
-          if (data.contact[contactType]) {
-            return [
-              { type: 'system', content: `${contactType.toUpperCase()}: ` },
-              { type: 'output', content: data.contact[contactType] }
-            ];
-          }
-        }
-        
-        return [{ type: 'error', content: `cat: ${args}: No such file or directory` }];
+        return [
+          { type: 'output', content: 'skills     projects     experience     contact     profile     terminal' }
+        ];
       }
     },
     skills: {
@@ -395,32 +277,6 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
         return output;
       }
     },
-    'theme': {
-      description: 'Change terminal theme',
-      execute: (args) => {
-        const validThemes = ['light', 'dark', 'hacker'];
-        
-        if (!args || !validThemes.includes(args)) {
-          return [
-            { type: 'error', content: `Invalid theme option. Available themes: ${validThemes.join(', ')}` },
-            { type: 'output', content: `Current theme: ${theme}` }
-          ];
-        }
-        
-        setTheme(args);
-        
-        // If switching between light and dark, also toggle site-wide dark mode
-        if ((args === 'light' || args === 'dark') && args !== theme) {
-          if (args === 'light' && isDarkMode) {
-            toggleDarkMode();
-          } else if (args === 'dark' && !isDarkMode) {
-            toggleDarkMode();
-          }
-        }
-        
-        return [{ type: 'system', content: `Theme changed to "${args}"` }];
-      }
-    },
     'sudo': {
       description: 'Sudo command',
       execute: (args) => {
@@ -544,52 +400,29 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     };
   }, []);
 
-  // Update theme when isDarkMode changes
-  useEffect(() => {
-    setTheme(isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
-
-  // Determine terminal styles based on theme
+  // Get terminal styles based on dark mode
   const getTerminalStyles = () => {
-    switch (theme) {
-      case 'light':
-        return {
-          bg: 'bg-white',
-          text: 'text-gray-800',
-          header: 'bg-gray-100 border-gray-300',
-          prompt: 'text-blue-600',
-          commandText: 'text-gray-800',
-          systemText: 'text-blue-600',
-          outputText: 'text-gray-800',
-          errorText: 'text-red-600',
-          border: 'border-gray-300'
-        };
-      case 'hacker':
-        return {
-          bg: 'bg-black',
-          text: 'text-green-500',
-          header: 'bg-black border-green-800',
-          prompt: 'text-green-500',
-          commandText: 'text-green-500',
-          systemText: 'text-green-300',
-          outputText: 'text-green-500',
-          errorText: 'text-red-500',
-          border: 'border-green-800'
-        };
-      case 'dark':
-      default:
-        return {
-          bg: 'bg-gray-900',
-          text: 'text-green-400',
-          header: 'bg-gray-800 border-gray-700',
-          prompt: 'text-green-400',
-          commandText: 'text-white',
-          systemText: 'text-blue-400',
-          outputText: 'text-green-400',
-          errorText: 'text-red-500',
-          border: 'border-gray-700'
-        };
-    }
+    return isDarkMode ? {
+      bg: 'bg-gray-900',
+      text: 'text-green-400',
+      header: 'bg-gray-800 border-gray-700',
+      prompt: 'text-green-400',
+      commandText: 'text-white',
+      systemText: 'text-blue-400',
+      outputText: 'text-green-400',
+      errorText: 'text-red-500',
+      border: 'border-gray-700'
+    } : {
+      bg: 'bg-gray-900',
+      text: 'text-green-400',
+      header: 'bg-gray-800 border-gray-700',
+      prompt: 'text-green-400',
+      commandText: 'text-white',
+      systemText: 'text-blue-400',
+      outputText: 'text-green-400',
+      errorText: 'text-red-500',
+      border: 'border-gray-700'
+    };
   };
 
   const styles = getTerminalStyles();
@@ -614,7 +447,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
                   <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
-                <span>Terminal - {currentDirectory} - {theme} mode</span>
+                <span>Terminal - DRK Portfolio</span>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
@@ -650,7 +483,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   className={`flex-1 ${styles.bg} border-none outline-none ${styles.text} font-mono pl-1`}
-                  style={{ caretColor: theme === 'hacker' ? '#22c55e' : theme === 'light' ? '#2563eb' : '#4ade80' }}
+                  style={{ caretColor: '#4ade80' }}
                   spellCheck="false"
                   autoCapitalize="none"
                   autoComplete="off"
