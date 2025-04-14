@@ -81,7 +81,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
           degree: "Master's in Information Technology and Management",
           school: "Illinois Institute of Technology",
           location: "Chicago, IL",
-          year: "",
+          year: "2023",
           details: "Focused on advanced software development and cloud computing"
         }
       ],
@@ -93,52 +93,84 @@ export const AIChatBubble = ({ isDarkMode }) => {
     },
     workExperience: [
       {
-        company: "FourHub Tech LLC",
-        position: "Software Engineer",
-        duration: "2021 - Present",
+        company: "AbbVie",
+        position: "Java Full Stack Developer",
+        duration: "Feb 2024 - Present",
         responsibilities: [
-          "Led development of cloud-native applications using React, Node.js and AWS",
-          "Implemented CI/CD pipelines and automated testing frameworks",
-          "Collaborated with cross-functional teams to deliver high-quality software solutions"
+          "Developing and maintaining enterprise Java applications with Spring Boot",
+          "Building responsive front-end interfaces using modern JavaScript frameworks",
+          "Led the migration of monolithic applications to microservices architecture, improving scalability and maintainability"
         ]
       },
       {
-        company: "WeSpotHire LLC",
-        position: "Software Developer",
-        duration: "2019 - 2021",
+        company: "BMO Harris Bank",
+        position: "Java Full Stack Developer",
+        duration: "May 2023 - Jan 2024",
         responsibilities: [
-          "Developed and maintained RESTful APIs and microservices",
-          "Built and enhanced frontend components using React and TypeScript",
-          "Participated in code reviews and mentored junior developers"
+          "Developed and maintained banking applications using Java, Spring, and Angular",
+          "Implemented RESTful APIs for financial data processing and transaction management",
+          "Collaborated with business stakeholders to translate requirements into technical solutions"
+        ]
+      },
+      {
+        company: "Airtel",
+        position: "Java Full Stack Developer",
+        duration: "Sep 2021 - Dec 2022",
+        responsibilities: [
+          "Built and maintained telecommunications applications using Java and related technologies",
+          "Implemented front-end interfaces with React for customer-facing applications",
+          "Optimized database queries and enhanced application performance for high-traffic services"
+        ]
+      },
+      {
+        company: "CIBC Bank",
+        position: "Java Developer",
+        duration: "Jun 2020 - Jun 2021",
+        responsibilities: [
+          "Developed banking software solutions using Java and Spring framework",
+          "Created and maintained database schemas, stored procedures, and queries",
+          "Implemented unit and integration tests to ensure application reliability"
         ]
       }
     ],
     techStack: {
       frontend: ["React", "TypeScript", "JavaScript", "HTML5", "CSS3", "Tailwind CSS"],
-      backend: ["Node.js", "Python", "Java", "Express", "Django", "RESTful APIs"],
+      backend: ["Node.js", "Python", "Java", "Spring Boot", "Express", "Django", "RESTful APIs"],
       devops: ["Docker", "Kubernetes", "CI/CD", "GitHub Actions", "Jenkins"],
       cloud: ["AWS", "Azure", "GCP", "Serverless", "Microservices"],
       databases: ["MongoDB", "PostgreSQL", "MySQL", "Redis", "Firebase"],
-      other: ["Agile SDLC", "Scrum", "Kanban", "Waterfall", "JIRA", "GitHub", "Linux", "Rest APIs", "Microservices Architecture", "Redis", "Spark", "Splunk", "TDD", "BDD"]
+      other: ["Agile SDLC", "Scrum", "Kanban", "Waterfall", "JIRA", "Spark", "Splunk", "ELK Stack"]
     },
     projects: [
       {
-        name: "Data Visualization Dashboard",
-        description: "An interactive dashboard for visualizing complex datasets with filterable views and real-time updates.",
-        technologies: ["React", "D3.js", "Node.js", "MongoDB", "WebSockets"],
-        highlights: "Features interactive charts, custom filtering, and real-time data updates"
+        name: "Pharma Cloud Platform",
+        description: "Developed a cloud-based platform for pharmaceutical data management and analytics.",
+        technologies: ["Java", "Spring Boot", "AWS"],
+        highlights: "Secure, scalable data management solution for pharmaceutical industry"
       },
       {
-        name: "Machine Learning Model Deployment",
-        description: "End-to-end ML deployment pipeline for image classification models with automated training and serving.",
-        technologies: ["Python", "TensorFlow", "Docker", "Kubernetes", "Flask API"],
-        highlights: "Includes CI/CD integration, model versioning, and performance monitoring"
+        name: "Banking Microservices App",
+        description: "Built a microservices-based banking application with a scalable architecture",
+        technologies: ["React", "Node.js", "Docker"],
+        highlights: "Modular design with high availability and fault tolerance"
       },
       {
-        name: "Real-time Collaborative Editor",
-        description: "A collaborative coding environment allowing multiple users to edit code simultaneously.",
-        technologies: ["React", "Node.js", "WebSockets", "MongoDB", "Redis"],
-        highlights: "Features syntax highlighting, real-time collaboration, and chat functionality"
+        name: "Retail Analytics Dashboard",
+        description: "Created an analytics dashboard for retail data visualization and reporting",
+        technologies: ["Python", "Flask", "Javascript"],
+        highlights: "Interactive visualizations and real-time analytics capabilities"
+      },
+      {
+        name: "Personal Portfolio Website",
+        description: "Designed and developed this responsive portfolio website with modern UI/UX principles",
+        technologies: ["React", "TailwindCSS", "Vite"],
+        highlights: "Clean design with dark/light modes and interactive elements"
+      },
+      {
+        name: "AI-Powered Image Generator",
+        description: "Created a web application that uses machine learning to generate custom images based on text prompts",
+        technologies: ["Python", "TensorFlow", "React", "Flask"],
+        highlights: "Integration with state-of-the-art image generation models"
       }
     ],
     latestProject: {
@@ -229,16 +261,16 @@ export const AIChatBubble = ({ isDarkMode }) => {
       `Deepak's latest project is a ${portfolioContent.latestProject.name}.\n\nIt's ${portfolioContent.latestProject.description}\n\nTech stack: ${portfolioContent.latestProject.technologies.join(', ')}\n\nHighlights: ${portfolioContent.latestProject.highlights}`
     ],
     skills: [
-      `Deepak is skilled in:\n\n• Frontend: ${portfolioContent.techStack.frontend.join(', ')}\n• Backend: ${portfolioContent.techStack.backend.join(', ')}\n• DevOps: ${portfolioContent.techStack.devops.join(', ')}\n• Cloud: ${portfolioContent.techStack.cloud.join(', ')}\n• Databases: ${portfolioContent.techStack.databases.join(', ')}\n• Other Technologies: ${portfolioContent.techStack.other.join(', ')}\n\nNeed any details on these?`
+      `Deepak is skilled in:\n\n• Frontend: ${portfolioContent.techStack.frontend.join(', ')}\n• Backend: ${portfolioContent.techStack.backend.join(', ')}\n• DevOps: ${portfolioContent.techStack.devops.join(', ')}\n• Cloud: ${portfolioContent.techStack.cloud.join(', ')}\n• Databases: ${portfolioContent.techStack.databases.join(', ')}\n• Other: ${portfolioContent.techStack.other.join(', ')}\n\nNeed any details on these?`
     ],
     specialization: [
       `Deepak specializes in:\n\n• ${portfolioContent.specializations.join('\n• ')}\n\nWhich area are you most interested in?`
     ],
     education: [
-      `Deepak's educational background includes:\n\n• ${portfolioContent.education.degrees[0].degree} from ${portfolioContent.education.degrees[0].school} (${portfolioContent.education.degrees[0].location})\n\nHe also holds certifications in:\n• ${portfolioContent.education.certifications.join('\n• ')}`
+      `Deepak's educational background includes:\n\n• ${portfolioContent.education.degrees[0].degree} from ${portfolioContent.education.degrees[0].school} (${portfolioContent.education.degrees[0].location}), ${portfolioContent.education.degrees[0].year}\n  ${portfolioContent.education.degrees[0].details}\n\nHe also holds certifications in:\n• ${portfolioContent.education.certifications.join('\n• ')}`
     ],
     experience: [
-      `Deepak's work experience includes:\n\n• ${portfolioContent.workExperience[0].position} at ${portfolioContent.workExperience[0].company} (${portfolioContent.workExperience[0].duration})\n  - ${portfolioContent.workExperience[0].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[1].position} at ${portfolioContent.workExperience[1].company} (${portfolioContent.workExperience[1].duration})\n  - ${portfolioContent.workExperience[1].responsibilities.join('\n  - ')}\n\nWould you like to know more about a specific role?`,
+      `Deepak's work experience includes:\n\n• ${portfolioContent.workExperience[0].position} at ${portfolioContent.workExperience[0].company} (${portfolioContent.workExperience[0].duration})\n  - ${portfolioContent.workExperience[0].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[1].position} at ${portfolioContent.workExperience[1].company} (${portfolioContent.workExperience[1].duration})\n  - ${portfolioContent.workExperience[1].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[2].position} at ${portfolioContent.workExperience[2].company} (${portfolioContent.workExperience[2].duration})\n  - ${portfolioContent.workExperience[2].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[3].position} at ${portfolioContent.workExperience[3].company} (${portfolioContent.workExperience[3].duration})\n  - ${portfolioContent.workExperience[3].responsibilities.join('\n  - ')}\n\nWould you like to know more about a specific role?`,
     ],
     contact: [
       "You can contact Deepak directly at deepakreddyiitc1234@gmail.com. Do you need any other information?",
@@ -945,6 +977,9 @@ export const AIChatBubble = ({ isDarkMode }) => {
       
       if (companyData) {
         return `About Deepak's work at ${companyData.company}:\n\n• Position: ${companyData.position}\n• Period: ${companyData.duration}\n\nKey responsibilities:\n• ${companyData.responsibilities.join('\n• ')}`;
+      } else {
+        // If company not found, provide complete experience with a note
+        return `I don't have specific information about Deepak's work at ${company}. Here's his complete work experience:\n\n` + chatResponses.experience[0];
       }
     }
     
@@ -1013,10 +1048,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
         // Use our built-in response system as a fallback
         const responseType = determineResponseType(userMessage);
         const contextData = extractContextFromMessage(userMessage);
-        const fallbackResponse = getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
-        
-        // Add a note about the API key
-        return fallbackResponse + "\n\n(Note: I'm currently operating with limited capabilities as my OpenAI connection isn't configured. Please add your API key to the .env file to enable full AI features.)";
+        return getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
       }
       
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -1033,9 +1065,42 @@ export const AIChatBubble = ({ isDarkMode }) => {
               content: `You are Deepu, a helpful portfolio assistant for Deepak Reddy. 
                        You should ONLY answer questions about Deepak's skills, experience, and background based on this information:
                        
+                       ABOUT:
                        Deepak is a Java Full Stack Developer based in Chicago, IL.
-                       He has experience with React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS, Java, Spring Boot, Node.js, Python, Express, RESTful APIs.
-                       He's worked at AbbVie (Feb 2024 - Present), BMO Harris Bank (May 2023 - Jan 2024), Airtel (Sep 2021 - Dec 2022), and CIBC Bank (Jun 2020 - Jun 2021).
+                       
+                       EDUCATION:
+                       - Master's in Information Technology and Management from Illinois Institute of Technology, Chicago, IL (2023)
+                       - Focused on advanced software development and cloud computing
+                       - Certifications: AWS Solutions Architect Associate, Microsoft Azure Administrator, Google Cloud Professional Developer
+                       
+                       SKILLS:
+                       - Frontend: React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS
+                       - Backend: Java, Spring Boot, Node.js, Python, Express, RESTful APIs
+                       - DevOps: Docker, Kubernetes, CI/CD, GitHub Actions, Jenkins
+                       - Cloud: AWS, Azure, GCP, Serverless, Microservices
+                       - Databases: MongoDB, PostgreSQL, MySQL, Redis, Firebase
+                       - Other: Agile SDLC, Scrum, Kanban, Waterfall, JIRA, Spark, Splunk, ELK Stack
+                       
+                       WORK EXPERIENCE:
+                       1. AbbVie (Feb 2024 - Present) - Java Full Stack Developer
+                          - Developing and maintaining enterprise Java applications with Spring Boot
+                          - Building responsive front-end interfaces using modern JavaScript frameworks
+                          - Led the migration of monolithic applications to microservices architecture, improving scalability and maintainability
+                          
+                       2. BMO Harris Bank (May 2023 - Jan 2024) - Java Full Stack Developer
+                          - Developed and maintained banking applications using Java, Spring, and Angular
+                          - Implemented RESTful APIs for financial data processing and transaction management
+                          - Collaborated with business stakeholders to translate requirements into technical solutions
+                          
+                       3. Airtel (Sep 2021 - Dec 2022) - Java Full Stack Developer
+                          - Built and maintained telecommunications applications using Java and related technologies
+                          - Implemented front-end interfaces with React for customer-facing applications
+                          - Optimized database queries and enhanced application performance for high-traffic services
+                          
+                       4. CIBC Bank (Jun 2020 - Jun 2021) - Java Developer
+                          - Developed banking software solutions using Java and Spring framework
+                          - Created and maintained database schemas, stored procedures, and queries
+                          - Implemented unit and integration tests to ensure application reliability
                        
                        IMPORTANT: If the user asks ANYTHING that is not directly related to Deepak's portfolio, skills, projects, education, or experience, you must respond with:
                        "I'm Deepak's portfolio assistant and can only answer questions about his skills, projects, experience, and background. I'm not able to provide information on other topics. Feel free to ask me anything about Deepak's work or portfolio!"
@@ -1089,10 +1154,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
         // Use our built-in response system as a fallback
         const responseType = determineResponseType(userMessage);
         const contextData = extractContextFromMessage(userMessage);
-        const fallbackResponse = getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
-        
-        // Add a note about the configuration
-        return fallbackResponse + "\n\n(Note: I'm currently operating with limited capabilities as my Dialogflow connection isn't configured. Please set up Dialogflow in the .env file to enable full AI features.)";
+        return getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
       }
       
       // For now, since proper Dialogflow authentication requires a backend service
@@ -1100,8 +1162,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
       console.warn('Dialogflow integration requires backend authentication. Using fallback response system.');
       const responseType = determineResponseType(userMessage);
       const contextData = extractContextFromMessage(userMessage);
-      return getResponse(responseType !== 'default' ? responseType : 'greeting', contextData) + 
-             "\n\n(Note: For full Dialogflow integration, please implement proper authentication via a backend service.)";
+      return getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
       
       // Commented out Dialogflow implementation requiring authentication
       /*
