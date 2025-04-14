@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
 export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,6 +117,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'output', content: '  email             - Show email contact or open mailto link' },
           { type: 'output', content: '  theme             - Toggle between light/dark mode' },
           { type: 'output', content: '  open [site]       - Open social media links in browser' },
+          { type: 'output', content: '  sendmsg           - Send a message to Deepak' },
           { type: 'output', content: '  exit              - Close the terminal' }
         ];
       }
@@ -300,6 +302,85 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'system', content: 'OPENING LINK:' },
           { type: 'output', content: `Opening ${site} in a new tab...` }
         ];
+      }
+    },
+    'sendmsg': {
+      description: 'Send a message to Deepak',
+      execute: (args) => {
+        if (!args) {
+          return [
+            { type: 'system', content: 'SEND MESSAGE:' },
+            { type: 'output', content: 'Usage: sendmsg "Your Name" "Your Email" "Your Message"' },
+            { type: 'output', content: 'Example: sendmsg "Jane Doe" "jane@example.com" "Hi, I\'d like to discuss a project."' }
+          ];
+        }
+        
+        // Try to parse the arguments
+        let name, email, message;
+        
+        try {
+          // Match quoted strings
+          const regex = /"([^"]*)"/g;
+          const matches = [...args.matchAll(regex)];
+          
+          if (matches.length < 3) {
+            return [
+              { type: 'error', content: 'Error: Not enough parameters. Please provide name, email, and message in quotes.' },
+              { type: 'output', content: 'Example: sendmsg "Jane Doe" "jane@example.com" "Hi, I\'d like to discuss a project."' }
+            ];
+          }
+          
+          name = matches[0][1];
+          email = matches[1][1];
+          message = matches[2][1];
+          
+          // Validate email format
+          if (!/^\S+@\S+\.\S+$/.test(email)) {
+            return [
+              { type: 'error', content: `Error: "${email}" is not a valid email address.` }
+            ];
+          }
+          
+          // Initialize EmailJS
+          emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+          
+          // Send email
+          emailjs.send(
+            import.meta.env.VITE_EMAILJS_SERVICE_ID_CONTACT,
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CONTACT,
+            {
+              name: name,
+              email: email,
+              message: `Message from Terminal: ${message}`,
+              subject: 'Terminal Message from Portfolio',
+            }
+          )
+          .then(() => {
+            setHistory(prev => [
+              ...prev, 
+              { type: 'system', content: 'MESSAGE SENT:' },
+              { type: 'output', content: 'Your message has been sent to Deepak. He will get back to you soon.' }
+            ]);
+          })
+          .catch((error) => {
+            console.error('Failed to send message:', error);
+            setHistory(prev => [
+              ...prev, 
+              { type: 'error', content: 'Failed to send message. Please try again later or use the contact form.' }
+            ]);
+          });
+          
+          return [
+            { type: 'system', content: 'SENDING MESSAGE:' },
+            { type: 'output', content: 'Processing your message...' }
+          ];
+        } catch (error) {
+          console.error('Error parsing command:', error);
+          return [
+            { type: 'error', content: 'Error: Invalid format. Please provide name, email, and message in quotes.' },
+            { type: 'output', content: 'Example: sendmsg "Jane Doe" "jane@example.com" "Hi, I\'d like to discuss a project."' }
+          ];
+        }
       }
     },
     exit: {
