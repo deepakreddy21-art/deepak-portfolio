@@ -54,7 +54,12 @@ export const MobileMenu = ({ menuOpen, setMenuOpen, isDarkMode }) => {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            window.open("https://drive.google.com/file/d/1IyTVLQiJhc2-Z3C78y2diijVFG5_LiVV/view?usp=drive_link", "_blank");
+            const link = document.createElement('a');
+            link.href = '/Deepak_JFS_Dev_5Years.pdf';
+            link.download = 'Deepak_JFS_Dev_5Years.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
             return false;
           }}
           className="px-4 py-2 rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md hover:shadow-lg transition-all font-bold"

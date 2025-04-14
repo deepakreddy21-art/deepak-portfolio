@@ -1190,8 +1190,8 @@ export const AIChatBubble = ({ isDarkMode }) => {
     if (lowerInput.includes('download resume') || lowerInput.includes('get resume')) {
       // Create a temporary link element
       const link = document.createElement('a');
-      link.href = '/resume.pdf'; // Path to resume in public folder
-      link.download = 'deepak_reddy_resume.pdf';
+      link.href = '/Deepak_JFS_Dev_5Years.pdf'; // Path to resume in public folder
+      link.download = 'Deepak_JFS_Dev_5Years.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
