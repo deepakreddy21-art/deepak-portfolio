@@ -391,6 +391,23 @@ export const AIChatBubble = ({ isDarkMode }) => {
   const determineResponseType = (input) => {
     const lowerInput = input.toLowerCase();
     
+    // Check for specific skill queries first
+    for (const category in portfolioContent.techStack) {
+      for (const skill of portfolioContent.techStack[category]) {
+        // Match patterns like "tell me about java" or "experience with react" or "where did you use python"
+        if (
+          (lowerInput.includes(skill.toLowerCase()) && 
+          (lowerInput.includes('experience') || 
+           lowerInput.includes('where') || 
+           lowerInput.includes('used') || 
+           lowerInput.includes('worked with') ||
+           lowerInput.includes('tell me about')))
+        ) {
+          return 'specificSkill';
+        }
+      }
+    }
+    
     // Check specifically for education-related queries first
     if (lowerInput === 'education' || 
         lowerInput === 'what is deepak education' || 
@@ -970,11 +987,42 @@ export const AIChatBubble = ({ isDarkMode }) => {
   };
 
   const getResponse = (category, context = {}) => {
-    // Always try to gather fresh data before responding
-    gatherPortfolioData();
+    if (category === 'specificSkill' && context.technology) {
+      const skill = context.technology;
+      const skillExperience = findSkillExperience(skill);
+      
+      if (skillExperience.found) {
+        let response = `Here's where Deepak has used ${skill}:\n\n`;
+        
+        // Add experience items
+        if (skillExperience.experienceItems.length > 0) {
+          response += `**Work Experience:**\n`;
+          skillExperience.experienceItems.forEach(exp => {
+            response += `• ${exp.position} at ${exp.company} (${exp.duration})\n`;
+            exp.responsibilities.forEach(resp => {
+              response += `  - ${resp}\n`;
+            });
+          });
+        }
+        
+        // Add project items
+        if (skillExperience.projectItems.length > 0) {
+          response += `\n**Projects:**\n`;
+          skillExperience.projectItems.forEach(proj => {
+            response += `• ${proj.name}\n`;
+            response += `  - ${proj.description}\n`;
+            response += `  - Technologies: ${proj.technologies.join(', ')}\n`;
+          });
+        }
+        
+        return response;
+      } else {
+        return `While ${skill} is one of Deepak's skills, I don't have specific details about where he's used it in his work experience or projects. Would you like to know about his general experience or other skills?`;
+      }
+    }
     
-    // For certain queries, generate a more dynamic, custom response
-    switch(category) {
+    // Handle the rest of the responses based on category
+    switch (category) {
       case 'experience':
         return generateExperienceResponse(context);
       case 'projects':
@@ -1463,18 +1511,26 @@ When answering questions about Deepak's education, always mention that he earned
       }
     });
     
-    // Check for technology mentions
-    ['frontend', 'backend', 'devops', 'cloud', 'databases'].forEach(category => {
-      if (lowerMessage.includes(category)) {
-        context.category = category;
-      }
-      
+    // First check for specific technologies (more specific than categories)
+    let foundTechnology = false;
+    Object.keys(portfolioContent.techStack).forEach(category => {
       portfolioContent.techStack[category].forEach(tech => {
         if (lowerMessage.includes(tech.toLowerCase())) {
           context.technology = tech;
+          context.category = category;
+          foundTechnology = true;
         }
       });
     });
+    
+    // If no specific technology was found, then check for category mentions
+    if (!foundTechnology) {
+      Object.keys(portfolioContent.techStack).forEach(category => {
+        if (lowerMessage.includes(category.toLowerCase())) {
+          context.category = category;
+        }
+      });
+    }
     
     return context;
   };
@@ -1521,6 +1577,57 @@ When answering questions about Deepak's education, always mention that he earned
     setTimeout(() => {
       handleSendMessage();
     }, 300);
+  };
+
+  // Add a function to find skill references in work experience and projects
+  const findSkillExperience = (skill) => {
+    const skillLower = skill.toLowerCase();
+    let result = {
+      found: false,
+      experienceItems: [],
+      projectItems: []
+    };
+    
+    // Search through work experience
+    portfolioContent.workExperience.forEach(job => {
+      // Check if any responsibilities mention the skill
+      const relevantResponsibilities = job.responsibilities.filter(resp => 
+        resp.toLowerCase().includes(skillLower)
+      );
+      
+      if (relevantResponsibilities.length > 0) {
+        result.found = true;
+        result.experienceItems.push({
+          company: job.company,
+          position: job.position,
+          duration: job.duration,
+          responsibilities: relevantResponsibilities
+        });
+      }
+    });
+    
+    // Search through projects
+    portfolioContent.projects.forEach(project => {
+      // Check if technologies include the skill
+      const hasTechnology = project.technologies.some(tech => 
+        tech.toLowerCase().includes(skillLower)
+      );
+      
+      // Check if description mentions the skill
+      const mentionsInDescription = project.description.toLowerCase().includes(skillLower);
+      
+      if (hasTechnology || mentionsInDescription) {
+        result.found = true;
+        result.projectItems.push({
+          name: project.name,
+          description: project.description,
+          technologies: project.technologies,
+          highlights: project.highlights
+        });
+      }
+    });
+    
+    return result;
   };
 
   return (
