@@ -81,7 +81,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
           degree: "Master's in Information Technology and Management",
           school: "Illinois Institute of Technology",
           location: "Chicago, IL",
-          year: "2023",
+          year: "",
           details: "Focused on advanced software development and cloud computing"
         }
       ],
@@ -267,7 +267,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
       `Deepak specializes in:\n\n• ${portfolioContent.specializations.join('\n• ')}\n\nWhich area are you most interested in?`
     ],
     education: [
-      `Deepak's educational background includes:\n\n• ${portfolioContent.education.degrees[0].degree} from ${portfolioContent.education.degrees[0].school} (${portfolioContent.education.degrees[0].location}), ${portfolioContent.education.degrees[0].year}\n  ${portfolioContent.education.degrees[0].details}\n\nHe also holds certifications in:\n• ${portfolioContent.education.certifications.join('\n• ')}`
+      `Deepak earned his Master's degree in Information Technology and Management from Illinois Institute of Technology.`
     ],
     experience: [
       `Deepak's work experience includes:\n\n• ${portfolioContent.workExperience[0].position} at ${portfolioContent.workExperience[0].company} (${portfolioContent.workExperience[0].duration})\n  - ${portfolioContent.workExperience[0].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[1].position} at ${portfolioContent.workExperience[1].company} (${portfolioContent.workExperience[1].duration})\n  - ${portfolioContent.workExperience[1].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[2].position} at ${portfolioContent.workExperience[2].company} (${portfolioContent.workExperience[2].duration})\n  - ${portfolioContent.workExperience[2].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[3].position} at ${portfolioContent.workExperience[3].company} (${portfolioContent.workExperience[3].duration})\n  - ${portfolioContent.workExperience[3].responsibilities.join('\n  - ')}\n\nWould you like to know more about a specific role?`,
@@ -285,9 +285,9 @@ export const AIChatBubble = ({ isDarkMode }) => {
       `For the Real-time Collaborative Editor, Deepak used:\n• Frontend: React\n• Backend: Node.js\n• Real-time communication: WebSockets\n• Database: MongoDB\n• Caching: Redis`
     ],
     default: [
-      "I'm Deepak's portfolio assistant and can only answer questions about his skills, projects, experience, and background. I'm not able to provide information on other topics. Feel free to ask me about his work or experience!",
-      "I'm designed specifically to help with information about Deepak's portfolio. I can tell you about his skills, projects, or experience, but I can't answer questions outside that scope. What would you like to know about Deepak?",
-      "As Deepak's portfolio assistant, I focus solely on providing information about his professional background and skills. For other topics, you might want to check elsewhere. Can I tell you about Deepak's projects instead?"
+      "I'm here to help with any questions you have. Feel free to ask about Deepak's background, technical topics, or other information you're curious about.",
+      "I'm happy to assist you with your question. What specific information are you looking for?",
+      "I'm here to help! Could you provide more details or clarify what you're interested in learning about?"
     ],
     goodbye: [
       "It was great chatting with you! Feel free to reach out anytime you have more questions about Deepak's work.",
@@ -390,6 +390,18 @@ export const AIChatBubble = ({ isDarkMode }) => {
 
   const determineResponseType = (input) => {
     const lowerInput = input.toLowerCase();
+    
+    // Check specifically for education-related queries first
+    if (lowerInput === 'education' || 
+        lowerInput === 'what is deepak education' || 
+        lowerInput === 'what is deepak\'s education' || 
+        lowerInput.includes('deepak education') || 
+        lowerInput.includes('deepak\'s education') ||
+        lowerInput.includes('degree') || 
+        lowerInput.includes('university') || 
+        lowerInput.includes('college')) {
+      return 'education';
+    }
     
     // Smart commands
     if (/^show my resume$|^show resume$|^view resume$/i.test(lowerInput)) {
@@ -827,6 +839,17 @@ export const AIChatBubble = ({ isDarkMode }) => {
   const simulateWebSearch = (query) => {
     const lowerQuery = query.toLowerCase();
     
+    // Special case for education-related queries
+    if (lowerQuery.includes('education') || 
+        lowerQuery.includes('degree') || 
+        lowerQuery.includes('university') || 
+        lowerQuery.includes('college') ||
+        lowerQuery.includes('academic') ||
+        lowerQuery.includes('study')) {
+      
+      return generateEducationResponse();
+    }
+    
     // Enhanced topic detection
     const findTopicMatches = () => {
       let bestMatch = null;
@@ -943,7 +966,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
   
   // Format response for questions we don't have data for
   const formatLimitedResponse = (query) => {
-    return "I'm Deepak's portfolio assistant and can only answer questions about his skills, projects, experience, and background. I'm not able to provide information on other topics. Feel free to ask me anything about Deepak's work or portfolio!";
+    return "I'll do my best to help you with that. Could you provide more details or ask in a different way?";
   };
 
   const getResponse = (category, context = {}) => {
@@ -1032,7 +1055,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
   };
   
   const generateEducationResponse = () => {
-    return chatResponses.education[0];
+    return `Deepak earned his Master's degree in Information Technology and Management from Illinois Institute of Technology.`;
   };
 
   // Send message to OpenAI API
@@ -1051,6 +1074,69 @@ export const AIChatBubble = ({ isDarkMode }) => {
         return getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
       }
       
+      // Prepare chat history for the API call
+      const apiMessages = [
+        { 
+          role: "system", 
+          content: `You are an intelligent AI assistant who can answer any type of question across technology, coding, education, career, or personal topics. Respond in a friendly and helpful tone. Provide thoughtful, real-time answers based on the question.
+
+Here are some facts about Deepak that you should use when answering questions about him:
+
+ABOUT:
+Deepak is a Java Full Stack Developer based in Chicago, IL.
+
+EDUCATION:
+- Deepak earned his Master's degree in Information Technology and Management from Illinois Institute of Technology.
+- His studies focused on advanced software development and cloud computing
+- Certifications: AWS Solutions Architect Associate, Microsoft Azure Administrator, Google Cloud Professional Developer
+
+SKILLS:
+- Frontend: React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS
+- Backend: Java, Spring Boot, Node.js, Python, Express, RESTful APIs
+- DevOps: Docker, Kubernetes, CI/CD, GitHub Actions, Jenkins
+- Cloud: AWS, Azure, GCP, Serverless, Microservices
+- Databases: MongoDB, PostgreSQL, MySQL, Redis, Firebase
+- Other: Agile SDLC, Scrum, Kanban, Waterfall, JIRA, Spark, Splunk, ELK Stack
+
+WORK EXPERIENCE:
+1. AbbVie (Feb 2024 - Present) - Java Full Stack Developer
+   - Developing and maintaining enterprise Java applications with Spring Boot
+   - Building responsive front-end interfaces using modern JavaScript frameworks
+   - Led the migration of monolithic applications to microservices architecture, improving scalability and maintainability
+   
+2. BMO Harris Bank (May 2023 - Jan 2024) - Java Full Stack Developer
+   - Developed and maintained banking applications using Java, Spring, and Angular
+   - Implemented RESTful APIs for financial data processing and transaction management
+   - Collaborated with business stakeholders to translate requirements into technical solutions
+   
+3. Airtel (Sep 2021 - Dec 2022) - Java Full Stack Developer
+   - Built and maintained telecommunications applications using Java and related technologies
+   - Implemented front-end interfaces with React for customer-facing applications
+   - Optimized database queries and enhanced application performance for high-traffic services
+   
+4. CIBC Bank (Jun 2020 - Jun 2021) - Java Developer
+   - Developed banking software solutions using Java and Spring framework
+   - Created and maintained database schemas, stored procedures, and queries
+   - Implemented unit and integration tests to ensure application reliability
+
+When answering questions about Deepak's education, always mention that he earned his Master's degree in Information Technology and Management from Illinois Institute of Technology.` 
+        }
+      ];
+      
+      // Add previous messages to maintain conversation context
+      // Get last 10 messages for context (or adjust as needed)
+      const recentMessages = [...messages].slice(-10);
+      recentMessages.forEach(msg => {
+        if (msg.type === 'user') {
+          apiMessages.push({ role: "user", content: msg.text });
+        } else if (msg.type === 'bot') {
+          apiMessages.push({ role: "assistant", content: msg.text });
+        }
+      });
+      
+      // Add the current user message
+      apiMessages.push({ role: "user", content: userMessage });
+      
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -1059,58 +1145,9 @@ export const AIChatBubble = ({ isDarkMode }) => {
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
-          messages: [
-            { 
-              role: "system", 
-              content: `You are Deepu, a helpful portfolio assistant for Deepak Reddy. 
-                       You should ONLY answer questions about Deepak's skills, experience, and background based on this information:
-                       
-                       ABOUT:
-                       Deepak is a Java Full Stack Developer based in Chicago, IL.
-                       
-                       EDUCATION:
-                       - Master's in Information Technology and Management from Illinois Institute of Technology, Chicago, IL (2023)
-                       - Focused on advanced software development and cloud computing
-                       - Certifications: AWS Solutions Architect Associate, Microsoft Azure Administrator, Google Cloud Professional Developer
-                       
-                       SKILLS:
-                       - Frontend: React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS
-                       - Backend: Java, Spring Boot, Node.js, Python, Express, RESTful APIs
-                       - DevOps: Docker, Kubernetes, CI/CD, GitHub Actions, Jenkins
-                       - Cloud: AWS, Azure, GCP, Serverless, Microservices
-                       - Databases: MongoDB, PostgreSQL, MySQL, Redis, Firebase
-                       - Other: Agile SDLC, Scrum, Kanban, Waterfall, JIRA, Spark, Splunk, ELK Stack
-                       
-                       WORK EXPERIENCE:
-                       1. AbbVie (Feb 2024 - Present) - Java Full Stack Developer
-                          - Developing and maintaining enterprise Java applications with Spring Boot
-                          - Building responsive front-end interfaces using modern JavaScript frameworks
-                          - Led the migration of monolithic applications to microservices architecture, improving scalability and maintainability
-                          
-                       2. BMO Harris Bank (May 2023 - Jan 2024) - Java Full Stack Developer
-                          - Developed and maintained banking applications using Java, Spring, and Angular
-                          - Implemented RESTful APIs for financial data processing and transaction management
-                          - Collaborated with business stakeholders to translate requirements into technical solutions
-                          
-                       3. Airtel (Sep 2021 - Dec 2022) - Java Full Stack Developer
-                          - Built and maintained telecommunications applications using Java and related technologies
-                          - Implemented front-end interfaces with React for customer-facing applications
-                          - Optimized database queries and enhanced application performance for high-traffic services
-                          
-                       4. CIBC Bank (Jun 2020 - Jun 2021) - Java Developer
-                          - Developed banking software solutions using Java and Spring framework
-                          - Created and maintained database schemas, stored procedures, and queries
-                          - Implemented unit and integration tests to ensure application reliability
-                       
-                       IMPORTANT: If the user asks ANYTHING that is not directly related to Deepak's portfolio, skills, projects, education, or experience, you must respond with:
-                       "I'm Deepak's portfolio assistant and can only answer questions about his skills, projects, experience, and background. I'm not able to provide information on other topics. Feel free to ask me anything about Deepak's work or portfolio!"
-                       
-                       Keep responses concise and friendly. If you don't know something specific about Deepak, suggest contacting him directly.` 
-            },
-            { role: "user", content: userMessage }
-          ],
+          messages: apiMessages,
           temperature: 0.7,
-          max_tokens: 150
+          max_tokens: 250
         })
       });
       
@@ -1444,6 +1481,40 @@ export const AIChatBubble = ({ isDarkMode }) => {
   
   // Handle quick suggestion click
   const handleSuggestionClick = (suggestion) => {
+    // For education queries, directly provide the education response
+    if (suggestion.toLowerCase() === 'education' || 
+        suggestion.toLowerCase().includes('education')) {
+      
+      // Add user message
+      const userMessage = {
+        id: Date.now(),
+        type: 'user',
+        text: suggestion
+      };
+      
+      setMessages(prevMessages => [...prevMessages, userMessage]);
+      setInputValue('');
+      
+      // Show typing indicator briefly
+      setIsTyping(true);
+      
+      // Add bot response after a short delay
+      setTimeout(() => {
+        setIsTyping(false);
+        
+        const botResponse = {
+          id: Date.now(),
+          type: 'bot',
+          text: generateEducationResponse()
+        };
+        
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+      }, 800);
+      
+      return;
+    }
+    
+    // For all other suggestions
     setInputValue(suggestion);
     
     // Auto-submit after a brief delay
