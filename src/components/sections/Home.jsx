@@ -26,7 +26,7 @@ export const Home = ({ isDarkMode }) => {
                 Deepak Reddy
               </h1>
               <h2 className="text-xl sm:text-2xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 font-semibold mb-1 md:mb-2">
-                Software Developer
+                Java Full Stack Developer
               </h2>
               <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} text-base sm:text-lg`}>
                 Chicago, IL, USA

@@ -196,7 +196,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'system', content: `${data.profile.name} - ${data.profile.role}` },
           { type: 'output', content: data.profile.degree },
           { type: 'output', content: `Portfolio: ${data.profile.portfolioUrl}` },
-          { type: 'output', content: 'Software Developer based in Chicago, IL' }
+          { type: 'output', content: 'Java Full Stack Developer based in Chicago, IL' }
         ];
       }
     },
