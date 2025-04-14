@@ -11,7 +11,7 @@ export const Experience = ({ isDarkMode }) => {
       details: [
         "Developing and maintaining enterprise Java applications with Spring Boot",
         "Building responsive front-end interfaces using modern JavaScript frameworks",
-        "Collaborating with cross-functional teams to deliver high-quality software solutions"
+        "Led the migration of monolithic applications to microservices architecture, improving scalability and maintainability"
       ]
     },
     {
