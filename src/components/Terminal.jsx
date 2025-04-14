@@ -12,6 +12,15 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
   const [theme, setTheme] = useState(isDarkMode ? 'dark' : 'light');
   const inputRef = useRef(null);
   const historyRef = useRef(null);
+  
+  // Add state for message collection flow
+  const [collectingMessage, setCollectingMessage] = useState(false);
+  const [messageStep, setMessageStep] = useState(0);
+  const [messageData, setMessageData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
 
   // Update theme when isDarkMode changes
   useEffect(() => {
@@ -307,80 +316,19 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     'sendmsg': {
       description: 'Send a message to Deepak',
       execute: (args) => {
-        if (!args) {
-          return [
-            { type: 'system', content: 'SEND MESSAGE:' },
-            { type: 'output', content: 'Usage: sendmsg "Your Name" "Your Email" "Your Message"' },
-            { type: 'output', content: 'Example: sendmsg "Jane Doe" "jane@example.com" "Hi, I\'d like to discuss a project."' }
-          ];
-        }
+        // Start the interactive message collection process
+        setCollectingMessage(true);
+        setMessageStep(0);
+        setMessageData({
+          name: '',
+          email: '',
+          message: ''
+        });
         
-        // Try to parse the arguments
-        let name, email, message;
-        
-        try {
-          // Match quoted strings
-          const regex = /"([^"]*)"/g;
-          const matches = [...args.matchAll(regex)];
-          
-          if (matches.length < 3) {
-            return [
-              { type: 'error', content: 'Error: Not enough parameters. Please provide name, email, and message in quotes.' },
-              { type: 'output', content: 'Example: sendmsg "Jane Doe" "jane@example.com" "Hi, I\'d like to discuss a project."' }
-            ];
-          }
-          
-          name = matches[0][1];
-          email = matches[1][1];
-          message = matches[2][1];
-          
-          // Validate email format
-          if (!/^\S+@\S+\.\S+$/.test(email)) {
-            return [
-              { type: 'error', content: `Error: "${email}" is not a valid email address.` }
-            ];
-          }
-          
-          // Initialize EmailJS
-          emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
-          
-          // Send email
-          emailjs.send(
-            import.meta.env.VITE_EMAILJS_SERVICE_ID_CONTACT,
-            import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CONTACT,
-            {
-              name: name,
-              email: email,
-              message: `Message from Terminal: ${message}`,
-              subject: 'Terminal Message from Portfolio',
-            }
-          )
-          .then(() => {
-            setHistory(prev => [
-              ...prev, 
-              { type: 'system', content: 'MESSAGE SENT:' },
-              { type: 'output', content: 'Your message has been sent to Deepak. He will get back to you soon.' }
-            ]);
-          })
-          .catch((error) => {
-            console.error('Failed to send message:', error);
-            setHistory(prev => [
-              ...prev, 
-              { type: 'error', content: 'Failed to send message. Please try again later or use the contact form.' }
-            ]);
-          });
-          
-          return [
-            { type: 'system', content: 'SENDING MESSAGE:' },
-            { type: 'output', content: 'Processing your message...' }
-          ];
-        } catch (error) {
-          console.error('Error parsing command:', error);
-          return [
-            { type: 'error', content: 'Error: Invalid format. Please provide name, email, and message in quotes.' },
-            { type: 'output', content: 'Example: sendmsg "Jane Doe" "jane@example.com" "Hi, I\'d like to discuss a project."' }
-          ];
-        }
+        return [
+          { type: 'system', content: 'SEND MESSAGE:' },
+          { type: 'output', content: 'Please enter your name:' }
+        ];
       }
     },
     exit: {
@@ -425,10 +373,16 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     setInput('');
   };
 
-  // Handle keyboard input
+  // Handle keyboard input - modify this function
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      executeCommand(input);
+      if (collectingMessage) {
+        // Handle message collection mode
+        processMessageInput();
+      } else {
+        // Normal command execution
+        executeCommand(input);
+      }
     }
   };
 
@@ -491,6 +445,117 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
   };
 
   const styles = getTerminalStyles();
+
+  // Add a new function to process message inputs
+  const processMessageInput = () => {
+    // Add user input to history
+    const newHistory = [...history, { type: 'command', content: input }];
+    
+    let updatedHistory = [...newHistory];
+    
+    switch (messageStep) {
+      case 0: // Collecting name
+        if (!input.trim()) {
+          updatedHistory.push({ type: 'error', content: 'Name cannot be empty. Please enter your name:' });
+        } else {
+          setMessageData({ ...messageData, name: input });
+          setMessageStep(1);
+          updatedHistory.push({ type: 'output', content: 'Please enter your email:' });
+        }
+        break;
+        
+      case 1: // Collecting email
+        if (!input.trim()) {
+          updatedHistory.push({ type: 'error', content: 'Email cannot be empty. Please enter your email:' });
+        } else if (!/^\S+@\S+\.\S+$/.test(input)) {
+          updatedHistory.push({ type: 'error', content: `"${input}" is not a valid email address. Please try again:` });
+        } else {
+          setMessageData({ ...messageData, email: input });
+          setMessageStep(2);
+          updatedHistory.push({ type: 'output', content: 'Please enter your message:' });
+        }
+        break;
+        
+      case 2: // Collecting message
+        if (!input.trim()) {
+          updatedHistory.push({ type: 'error', content: 'Message cannot be empty. Please enter your message:' });
+        } else {
+          const updatedMessageData = { ...messageData, message: input };
+          setMessageData(updatedMessageData);
+          
+          // Show confirmation
+          updatedHistory.push({ type: 'system', content: 'MESSAGE DETAILS:' });
+          updatedHistory.push({ type: 'output', content: `Name: ${updatedMessageData.name}` });
+          updatedHistory.push({ type: 'output', content: `Email: ${updatedMessageData.email}` });
+          updatedHistory.push({ type: 'output', content: `Message: ${updatedMessageData.message}` });
+          updatedHistory.push({ type: 'output', content: 'Send this message? (y/n)' });
+          
+          setMessageStep(3);
+        }
+        break;
+        
+      case 3: // Confirmation
+        if (input.toLowerCase() === 'y' || input.toLowerCase() === 'yes') {
+          // Send the message via EmailJS
+          updatedHistory.push({ type: 'system', content: 'SENDING MESSAGE:' });
+          updatedHistory.push({ type: 'output', content: 'Processing your message...' });
+          
+          // Initialize EmailJS
+          emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+          
+          // Send email
+          emailjs.send(
+            import.meta.env.VITE_EMAILJS_SERVICE_ID_CONTACT,
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CONTACT,
+            {
+              name: messageData.name,
+              email: messageData.email,
+              message: `Message from Terminal: ${messageData.message}`,
+              subject: 'Terminal Message from Portfolio',
+            }
+          )
+          .then(() => {
+            setHistory([
+              ...updatedHistory,
+              { type: 'system', content: 'MESSAGE SENT:' },
+              { type: 'output', content: 'Your message has been sent to Deepak. He will get back to you soon.' },
+              { type: 'prompt', content: '$ ' }
+            ]);
+            // Reset collection state
+            setCollectingMessage(false);
+            setMessageStep(0);
+          })
+          .catch((error) => {
+            console.error('Failed to send message:', error);
+            setHistory([
+              ...updatedHistory,
+              { type: 'error', content: 'Failed to send message. Please try again later or use the contact form.' },
+              { type: 'prompt', content: '$ ' }
+            ]);
+            // Reset collection state
+            setCollectingMessage(false);
+            setMessageStep(0);
+          });
+        } else if (input.toLowerCase() === 'n' || input.toLowerCase() === 'no') {
+          updatedHistory.push({ type: 'output', content: 'Message cancelled.' });
+          updatedHistory.push({ type: 'prompt', content: '$ ' });
+          // Reset collection state
+          setCollectingMessage(false);
+          setMessageStep(0);
+        } else {
+          updatedHistory.push({ type: 'error', content: 'Please answer with "y" (yes) or "n" (no):' });
+        }
+        break;
+    }
+    
+    // If we're still collecting input (didn't finish or had an error), don't add the prompt
+    if (collectingMessage && !(messageStep === 3 && (input.toLowerCase() === 'y' || input.toLowerCase() === 'yes' || input.toLowerCase() === 'n' || input.toLowerCase() === 'no'))) {
+      setHistory(updatedHistory);
+    }
+    
+    // Clear input
+    setInput('');
+  };
 
   return (
     <>
