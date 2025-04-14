@@ -24,7 +24,8 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
       backend: ["Java", "Spring Boot", "Node.js", "Python", "Express", "RESTful APIs"],
       devops: ["Docker", "Kubernetes", "CI/CD", "GitHub Actions", "Jenkins"],
       cloud: ["AWS", "Azure", "GCP", "Serverless", "Microservices"],
-      databases: ["MongoDB", "PostgreSQL", "MySQL", "Oracle", "Redis"]
+      databases: ["MongoDB", "PostgreSQL", "MySQL", "Oracle", "Redis"],
+      other: ["Agile SDLC", "Scrum", "Kanban", "Waterfall", "JIRA", "GitHub", "Linux", "Rest APIs", "Microservices Architecture", "Redis", "Spark", "Splunk", "TDD", "BDD"]
     },
     projects: [
       {

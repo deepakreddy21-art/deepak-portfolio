@@ -118,7 +118,8 @@ export const AIChatBubble = ({ isDarkMode }) => {
       backend: ["Node.js", "Python", "Java", "Express", "Django", "RESTful APIs"],
       devops: ["Docker", "Kubernetes", "CI/CD", "GitHub Actions", "Jenkins"],
       cloud: ["AWS", "Azure", "GCP", "Serverless", "Microservices"],
-      databases: ["MongoDB", "PostgreSQL", "MySQL", "Redis", "Firebase"]
+      databases: ["MongoDB", "PostgreSQL", "MySQL", "Redis", "Firebase"],
+      other: ["Agile SDLC", "Scrum", "Kanban", "Waterfall", "JIRA", "GitHub", "Linux", "Rest APIs", "Microservices Architecture", "Redis", "Spark", "Splunk", "TDD", "BDD"]
     },
     projects: [
       {
@@ -228,7 +229,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
       `Deepak's latest project is a ${portfolioContent.latestProject.name}.\n\nIt's ${portfolioContent.latestProject.description}\n\nTech stack: ${portfolioContent.latestProject.technologies.join(', ')}\n\nHighlights: ${portfolioContent.latestProject.highlights}`
     ],
     skills: [
-      `Deepak is skilled in:\n\n• Frontend: ${portfolioContent.techStack.frontend.join(', ')}\n• Backend: ${portfolioContent.techStack.backend.join(', ')}\n• DevOps: ${portfolioContent.techStack.devops.join(', ')}\n• Cloud: ${portfolioContent.techStack.cloud.join(', ')}\n• Databases: ${portfolioContent.techStack.databases.join(', ')}\n\nNeed any details on these?`
+      `Deepak is skilled in:\n\n• Frontend: ${portfolioContent.techStack.frontend.join(', ')}\n• Backend: ${portfolioContent.techStack.backend.join(', ')}\n• DevOps: ${portfolioContent.techStack.devops.join(', ')}\n• Cloud: ${portfolioContent.techStack.cloud.join(', ')}\n• Databases: ${portfolioContent.techStack.databases.join(', ')}\n• Other Technologies: ${portfolioContent.techStack.other.join(', ')}\n\nNeed any details on these?`
     ],
     specialization: [
       `Deepak specializes in:\n\n• ${portfolioContent.specializations.join('\n• ')}\n\nWhich area are you most interested in?`
