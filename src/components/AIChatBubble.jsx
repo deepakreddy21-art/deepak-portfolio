@@ -24,14 +24,47 @@ export const AIChatBubble = ({ isDarkMode }) => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   
+  // Config status
+  const [showConfigWarning, setShowConfigWarning] = useState(false);
+  
   // Contact form state
   const [contactMode, setContactMode] = useState(false);
   const [contactStep, setContactStep] = useState(0);
   const [contactInfo, setContactInfo] = useState({
     name: '',
     email: '',
+    phone: '', // Added phone field
     message: ''
   });
+  
+  // AI provider config (hidden from UI but used internally)
+  const [aiProvider, setAiProvider] = useState('openai'); // 'openai' or 'dialogflow'
+  
+  // UI text constants
+  const UI_TEXT = {
+    typing: "Deepu is typing...",
+    inputPlaceholder: "Type your message...",
+    confirmation: "Thanks! Your message was received. Deepak will get back to you soon."
+  };
+  
+  // Contact prompts
+  const contactPrompts = [
+    "I'd be happy to help you get in touch with Deepak! First, could you tell me your name?",
+    "Thanks! Could you provide your email address so Deepak can reach you?",
+    "If you'd like, please provide your phone number (optional):",
+    "Finally, what message would you like to send to Deepak?",
+    "Thanks for providing your information! Here's what I've collected:\n\nName: {{name}}\nEmail: {{email}}\nPhone: {{phone}}\nMessage: {{message}}\n\nIs this correct? (yes/no)"
+  ];
+  
+  // Language state
+  const [language, setLanguage] = useState('en'); // 'en', 'hi', 'te'
+  
+  // Suggestions based on context
+  const [quickSuggestions, setQuickSuggestions] = useState([
+    "What tech stack do you use?",
+    "Can I see his projects?",
+    "Where is Deepak based?"
+  ]);
   
   // Portfolio content for reference
   const portfolioContent = {
@@ -121,6 +154,67 @@ export const AIChatBubble = ({ isDarkMode }) => {
     }
   };
   
+  // Multi-language support
+  const translations = {
+    en: {
+      greeting: "👋 Hi there! I'm Deepu, Deepak's portfolio assistant. How can I help you today?",
+      typing: "Deepu is typing...",
+      inputPlaceholder: "Type your message...",
+      sendButton: "Send",
+      suggestions: {
+        techStack: "What tech stack do you use?",
+        projects: "Can I see his projects?",
+        location: "Where is Deepak based?"
+      },
+      contactPrompts: [
+        "I'd be happy to help you get in touch with Deepak! First, could you tell me your name?",
+        "Thanks! Could you provide your email address so Deepak can reach you?",
+        "If you'd like, please provide your phone number (optional):",
+        "Finally, what message would you like to send to Deepak?",
+        "Thanks for providing your information! Here's what I've collected:\n\nName: {{name}}\nEmail: {{email}}\nPhone: {{phone}}\nMessage: {{message}}\n\nIs this correct? (yes/no)"
+      ],
+      confirmation: "Thanks! Your message was received. Deepak will get back to you soon."
+    },
+    hi: {
+      greeting: "👋 नमस्ते! मैं दीपु हूं, दीपक का पोर्टफोलियो सहायक। मैं आपकी किस प्रकार सहायता कर सकता हूं?",
+      typing: "दीपु लिख रहा है...",
+      inputPlaceholder: "अपना संदेश लिखें...",
+      sendButton: "भेजें",
+      suggestions: {
+        techStack: "आप किस तकनीकी स्टैक का उपयोग करते हैं?",
+        projects: "मैं उनके प्रोजेक्ट्स देख सकता हूं?",
+        location: "दीपक कहां स्थित हैं?"
+      },
+      contactPrompts: [
+        "मैं आपको दीपक से संपर्क करने में मदद करूंगा! सबसे पहले, क्या आप अपना नाम बता सकते हैं?",
+        "धन्यवाद! क्या आप अपना ईमेल पता प्रदान कर सकते हैं ताकि दीपक आपसे संपर्क कर सकें?",
+        "यदि आप चाहें, तो कृपया अपना फोन नंबर प्रदान करें (वैकल्पिक):",
+        "अंत में, आप दीपक को क्या संदेश भेजना चाहते हैं?",
+        "जानकारी प्रदान करने के लिए धन्यवाद! यहां वह जानकारी है जो मैंने एकत्र की है:\n\nनाम: {{name}}\nईमेल: {{email}}\nफोन: {{phone}}\nसंदेश: {{message}}\n\nक्या यह सही है? (हां/नहीं)"
+      ],
+      confirmation: "धन्यवाद! आपका संदेश प्राप्त हो गया है। दीपक जल्द ही आपसे संपर्क करेंगे।"
+    },
+    te: {
+      greeting: "👋 హలో! నేను దీపు, దీపక్ పోర్ట్‌ఫోలియో సహాయకుడిని. నేను మీకు ఎలా సహాయం చేయగలను?",
+      typing: "దీపు టైప్ చేస్తున్నాడు...",
+      inputPlaceholder: "మీ సందేశాన్ని టైప్ చేయండి...",
+      sendButton: "పంపు",
+      suggestions: {
+        techStack: "మీరు ఏ టెక్ స్టాక్ ఉపయోగిస్తారు?",
+        projects: "నేను అతని ప్రాజెక్ట్‌లను చూడగలనా?",
+        location: "దీపక్ ఎక్కడ ఉన్నాడు?"
+      },
+      contactPrompts: [
+        "మిమ్మల్ని దీపక్‌తో సంప్రదించడంలో సహాయపడటానికి నేను సంతోషిస్తున్నాను! మొదట, మీ పేరు చెప్పగలరా?",
+        "ధన్యవాదాలు! దీపక్ మిమ్మల్ని సంప్రదించగలిగేలా మీ ఇమెయిల్ చిరునామాను అందించగలరా?",
+        "మీరు కోరుకుంటే, దయచేసి మీ ఫోన్ నంబర్‌ను అందించండి (ఐచ్ఛికం):",
+        "చివరగా, మీరు దీపక్‌కి ఏ సందేశాన్ని పంపాలనుకుంటున్నారు?",
+        "మీ సమాచారాన్ని అందించినందుకు ధన్యవాదాలు! ఇదిగో నేను సేకరించిన సమాచారం:\n\nపేరు: {{name}}\nఇమెయిల్: {{email}}\nఫోన్: {{phone}}\nసందేశం: {{message}}\n\nఇది సరైనదేనా? (అవును/కాదు)"
+      ],
+      confirmation: "ధన్యవాదాలు! మీ సందేశం అందింది. దీపక్ త్వరలో మిమ్మల్ని సంప్రదిస్తారు."
+    }
+  };
+  
   const chatResponses = {
     greeting: [
       "It's great to meet you! Are you interested in Deepak's work, or do you have a specific question?",
@@ -158,9 +252,9 @@ export const AIChatBubble = ({ isDarkMode }) => {
       `For the Real-time Collaborative Editor, Deepak used:\n• Frontend: React\n• Backend: Node.js\n• Real-time communication: WebSockets\n• Database: MongoDB\n• Caching: Redis`
     ],
     default: [
-      "That's an interesting question! While I'm just a simple bot, Deepak would be happy to discuss this with you. You can reach him at deepakreddyiitc1234@gmail.com.",
-      "Great question! Deepak would love to talk more about this. His email is deepakreddyiitc1234@gmail.com if you'd like to contact him directly.",
-      "I'm not sure I understand perfectly, but you can reach Deepak at deepakreddyiitc1234@gmail.com for more information."
+      "I'm Deepak's portfolio assistant and can only answer questions about his skills, projects, experience, and background. I'm not able to provide information on other topics. Feel free to ask me about his work or experience!",
+      "I'm designed specifically to help with information about Deepak's portfolio. I can tell you about his skills, projects, or experience, but I can't answer questions outside that scope. What would you like to know about Deepak?",
+      "As Deepak's portfolio assistant, I focus solely on providing information about his professional background and skills. For other topics, you might want to check elsewhere. Can I tell you about Deepak's projects instead?"
     ],
     goodbye: [
       "It was great chatting with you! Feel free to reach out anytime you have more questions about Deepak's work.",
@@ -195,13 +289,6 @@ export const AIChatBubble = ({ isDarkMode }) => {
     ]
   };
 
-  const contactPrompts = [
-    "I'd be happy to help you get in touch with Deepak! First, could you tell me your name?",
-    "Thanks! Could you provide your email address so Deepak can reach you?",
-    "Finally, what message would you like to send to Deepak?",
-    "Thanks for providing your information! Here's what I've collected:\n\nName: {{name}}\nEmail: {{email}}\nMessage: {{message}}\n\nIs this correct? (yes/no)"
-  ];
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -215,12 +302,52 @@ export const AIChatBubble = ({ isDarkMode }) => {
     emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY); // Initialize with your public key from env
   }, []);
 
+  // Check API configurations on mount
+  useEffect(() => {
+    // Check if either OpenAI or Dialogflow is configured
+    const openaiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    const dialogflowProjectId = import.meta.env.VITE_DIALOGFLOW_PROJECT_ID;
+    const dialogflowAgentId = import.meta.env.VITE_DIALOGFLOW_AGENT_ID;
+    
+    const isOpenAIConfigured = openaiKey && !openaiKey.includes('your_');
+    const isDialogflowConfigured = dialogflowProjectId && dialogflowAgentId && 
+                                !dialogflowProjectId.includes('your_') && 
+                                !dialogflowAgentId.includes('your_');
+    
+    // Show warning if neither is configured
+    if (!isOpenAIConfigured && !isDialogflowConfigured) {
+      setShowConfigWarning(true);
+      console.warn('Neither OpenAI nor Dialogflow is properly configured. Using built-in responses.');
+    } else {
+      setShowConfigWarning(false);
+    }
+  }, []);
+
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
+  };
+
+  // Toggle language
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    
+    // Update greeting message
+    const updatedMessages = [...messages];
+    if (updatedMessages[0].type === 'bot') {
+      updatedMessages[0].text = translations[lang].greeting;
+    }
+    setMessages(updatedMessages);
+    
+    // Update quick suggestions
+    setQuickSuggestions([
+      translations[lang].suggestions.techStack,
+      translations[lang].suggestions.projects,
+      translations[lang].suggestions.location
+    ]);
   };
 
   const getRandomResponse = (category) => {
@@ -323,161 +450,157 @@ export const AIChatBubble = ({ isDarkMode }) => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
+
+  const handleOptionClick = (option) => {
+    // Add the selected option as a user message
+    const userMessage = { 
+      id: Date.now(), 
+      type: 'user', 
+      text: option.text 
+    };
+    setMessages(prev => [...prev, userMessage]);
+    
+    // Process the option value
+    if (option.value === 'portfolio') {
+      // Show typing indicator
+      setIsTyping(true);
+      
+      setTimeout(() => {
+        setIsTyping(false);
+        
+        // Send portfolio introduction message
+        const botResponse = {
+          id: Date.now(),
+          type: 'bot',
+          text: "Great! I'd be happy to tell you about Deepak. What would you like to know about?\n\n• Skills & Technologies\n• Projects\n• Work Experience\n• Education\n\nOr you can ask me a specific question about Deepak's background or expertise."
+        };
+        setMessages(prev => [...prev, botResponse]);
+      }, 1000);
+    } else if (option.value === 'contact') {
+      // Start contact form flow
+      setContactMode(true);
+      processContactInput('');
+    }
+  };
+
   const processContactInput = (input) => {
-    // If this is the first prompt and input is empty, just show the prompt
-    if (contactStep === 0 && input === '') {
-      const botMessage = { 
-        id: messages.length + 1, 
-        type: 'bot', 
-        text: contactPrompts[0]
-      };
-      setMessages(prev => [...prev, botMessage]);
+    // If it's the initial call with empty input, just show the first prompt
+    if (input === '') {
+      setTimeout(() => {
+        const botResponse = { 
+          id: Date.now(), 
+          type: 'bot', 
+          text: contactPrompts[0]
+        };
+        setMessages(prev => [...prev, botResponse]);
+      }, 500);
       return;
     }
     
-    // Process input based on current step
-    if (input !== '') {
-      switch(contactStep) {
-        case 0:
-          // Store name
-          setContactInfo(prev => ({ ...prev, name: input }));
+    let newContactInfo = { ...contactInfo };
+    let nextStep = contactStep;
+    let responseText = '';
+    
+    switch (contactStep) {
+      case 0: // Name
+        newContactInfo.name = input;
+        responseText = contactPrompts[1];
+        nextStep = 1;
+        break;
+        
+      case 1: // Email
+        if (!isValidEmail(input)) {
+          responseText = "That doesn't look like a valid email address. Could you please enter a valid email?";
+        } else {
+          newContactInfo.email = input;
+          responseText = contactPrompts[2]; // Ask for phone (optional)
+          nextStep = 2;
+        }
+        break;
+        
+      case 2: // Phone (optional)
+        newContactInfo.phone = input; // Store even if empty
+        responseText = contactPrompts[3]; // Ask for message
+        nextStep = 3;
+        break;
+        
+      case 3: // Message
+        newContactInfo.message = input;
+        responseText = contactPrompts[4]
+          .replace('{{name}}', newContactInfo.name)
+          .replace('{{email}}', newContactInfo.email)
+          .replace('{{phone}}', newContactInfo.phone || 'Not provided')
+          .replace('{{message}}', newContactInfo.message);
+        nextStep = 4;
+        break;
+        
+      case 4: // Confirmation
+        if (input.toLowerCase() === 'yes' || input.toLowerCase() === 'y') {
+          // Send email using EmailJS
+          emailjs.send(
+            import.meta.env.VITE_EMAILJS_SERVICE_ID_CHAT,
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CHAT,
+            {
+              name: newContactInfo.name,
+              email: newContactInfo.email,
+              phone: newContactInfo.phone || 'Not provided',
+              message: newContactInfo.message,
+            }
+          )
+          .then((result) => {
+            console.log('Email sent:', result.text);
+          })
+          .catch((error) => {
+            console.error('Email error:', error.text);
+          });
           
-          // Increment step
-          setContactStep(1);
+          responseText = UI_TEXT.confirmation;
           
-          // Show next prompt
-          const nameResponse = { 
-            id: messages.length + 1, 
-            type: 'bot', 
-            text: contactPrompts[1]
-          };
-          setMessages(prev => [...prev, nameResponse]);
-          break;
-          
-        case 1:
-          // Email validation
-          if (!isValidEmail(input)) {
-            const invalidEmailResponse = { 
-              id: messages.length + 1, 
-              type: 'bot', 
-              text: "That doesn't appear to be a valid email address. Please provide a valid email so Deepak can get back to you."
-            };
-            setMessages(prev => [...prev, invalidEmailResponse]);
-          } else {
-            // Store email
-            setContactInfo(prev => ({ ...prev, email: input }));
-            
-            // Increment step
-            setContactStep(2);
-            
-            // Show next prompt
-            const emailResponse = { 
-              id: messages.length + 1, 
-              type: 'bot', 
-              text: contactPrompts[2]
-            };
-            setMessages(prev => [...prev, emailResponse]);
-          }
-          break;
-          
-        case 2:
-          // Store message
-          setContactInfo(prev => ({ ...prev, message: input }));
-          
-          // Increment step
-          setContactStep(3);
-          
-          // Show confirmation prompt
-          const confirmationText = contactPrompts[3]
-            .replace('{{name}}', contactInfo.name)
-            .replace('{{email}}', contactInfo.email)
-            .replace('{{message}}', input);
-            
-          const confirmationResponse = { 
-            id: messages.length + 1, 
-            type: 'bot', 
-            text: confirmationText
-          };
-          setMessages(prev => [...prev, confirmationResponse]);
-          break;
-          
-        case 3:
-          // Check if user confirmed
-          if (/yes|correct|right|looks good|send it/i.test(input)) {
-            // Send email
-            const templateParams = {
-              from_name: contactInfo.name,
-              from_email: contactInfo.email,
-              message: contactInfo.message
-            };
-            
-            emailjs.send(
-              import.meta.env.VITE_EMAILJS_SERVICE_ID_CHAT, 
-              import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CHAT, 
-              templateParams
-            )
-            .then((response) => {
-                console.log('SUCCESS!', response.status, response.text);
-              
-                // Show success message
-                const successResponse = { 
-                  id: messages.length + 1, 
-                type: 'bot', 
-                  text: "Great! I've sent your message to Deepak. He'll get back to you soon! Is there anything else I can help you with?"
-              };
-                setMessages(prev => [...prev, successResponse]);
-              
-                // Reset contact mode
-              setContactMode(false);
-              setContactStep(0);
-              setContactInfo({
-                name: '',
-                email: '',
-                message: ''
-              });
-              }, (err) => {
-                console.log('FAILED...', err);
-              
-                // Show error message
-                const errorResponse = { 
-                  id: messages.length + 1, 
-                type: 'bot', 
-                  text: "I'm sorry, there was an error sending your message. Please try again later or contact Deepak directly at deepakreddyiitc1234@gmail.com."
-              };
-                setMessages(prev => [...prev, errorResponse]);
-              
-                // Reset contact mode
-              setContactMode(false);
-              setContactStep(0);
+          // Reset contact mode and info
+          setTimeout(() => {
+            setContactMode(false);
+            setContactInfo({
+              name: '',
+              email: '',
+              phone: '',
+              message: ''
             });
-          } else {
-            // User wants to change something
-            const editResponse = { 
-              id: messages.length + 1, 
-                type: 'bot', 
-              text: "No problem! Let's start over. What's your name?"
-              };
-            setMessages(prev => [...prev, editResponse]);
-              
-            // Reset to step 0
-            setContactStep(0);
-              setContactInfo({
-                name: '',
-                email: '',
-                message: ''
-              });
-          }
-          break;
-          
-        default:
-          break;
-      }
+          }, 2000);
+        } else {
+          responseText = "No problem, let's try again. What's your name?";
+          nextStep = 0;
+        }
+        break;
+        
+      default:
+        responseText = "I'm not sure what happened. Let's start over. What's your name?";
+        nextStep = 0;
+        setContactMode(false);
     }
+    
+    // Update state
+    setContactInfo(newContactInfo);
+    setContactStep(nextStep);
+    
+    // Add bot message
+    setTimeout(() => {
+      const botResponse = {
+        id: Date.now(), 
+        type: 'bot',
+        text: responseText
+      };
+      
+      setMessages(prev => [...prev, botResponse]);
+    }, 800);
   };
-  
-  // Helper function to validate email
+
   const isValidEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return /^\S+@\S+\.\S+$/.test(email);
   };
 
   // Add a function to gather portfolio data dynamically
@@ -787,15 +910,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
   
   // Format response for questions we don't have data for
   const formatLimitedResponse = (query) => {
-    const responses = [
-      `That's an interesting question! While I focus primarily on helping you explore Deepak's portfolio and background, I can try to provide a general perspective:\n\nThis topic may involve multiple considerations and approaches. I'd recommend researching current sources for the most accurate and up-to-date information.\n\nWould you like to return to discussing Deepak's work and experience?`,
-      
-      `Great question! I specialize in providing information about Deepak's portfolio, skills, and background. For this specific topic, you might want to check specialized resources for the most current information.\n\nIs there anything about Deepak's work or skills that I can help with instead?`,
-      
-      `I appreciate your curiosity! While my primary purpose is to help you navigate Deepak's portfolio and professional background, this appears to be a more general question.\n\nFor the most accurate information on this topic, consulting specialized resources would be ideal.\n\nCan I tell you about Deepak's projects or experience instead?`
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)];
+    return "I'm Deepak's portfolio assistant and can only answer questions about his skills, projects, experience, and background. I'm not able to provide information on other topics. Feel free to ask me anything about Deepak's work or portfolio!";
   };
 
   const getResponse = (category, context = {}) => {
@@ -884,99 +999,350 @@ export const AIChatBubble = ({ isDarkMode }) => {
     return chatResponses.education[0];
   };
 
-  const handleSendMessage = () => {
+  // Send message to OpenAI API
+  const sendToOpenAI = async (userMessage) => {
+    try {
+      setIsTyping(true);
+      
+      // Check if API key exists
+      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+      
+      if (!apiKey || apiKey === 'your_openai_api_key_here' || apiKey.includes('your_')) {
+        console.warn('OpenAI API key is missing or not configured. Using fallback response system instead.');
+        // Use our built-in response system as a fallback
+        const responseType = determineResponseType(userMessage);
+        const contextData = extractContextFromMessage(userMessage);
+        const fallbackResponse = getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
+        
+        // Add a note about the API key
+        return fallbackResponse + "\n\n(Note: I'm currently operating with limited capabilities as my OpenAI connection isn't configured. Please add your API key to the .env file to enable full AI features.)";
+      }
+      
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { 
+              role: "system", 
+              content: `You are Deepu, a helpful portfolio assistant for Deepak Reddy. 
+                       You should ONLY answer questions about Deepak's skills, experience, and background based on this information:
+                       
+                       Deepak is a Full Stack Developer based in Chicago, IL.
+                       He has experience with React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS, Java, Spring Boot, Node.js, Python, Express, RESTful APIs.
+                       He's worked at AbbVie (Feb 2024 - Present), BMO Harris Bank (May 2023 - Jan 2024), Airtel (Sep 2021 - Dec 2022), and CIBC Bank (Jun 2020 - Jun 2021).
+                       
+                       IMPORTANT: If the user asks ANYTHING that is not directly related to Deepak's portfolio, skills, projects, education, or experience, you must respond with:
+                       "I'm Deepak's portfolio assistant and can only answer questions about his skills, projects, experience, and background. I'm not able to provide information on other topics. Feel free to ask me anything about Deepak's work or portfolio!"
+                       
+                       Keep responses concise and friendly. If you don't know something specific about Deepak, suggest contacting him directly.` 
+            },
+            { role: "user", content: userMessage }
+          ],
+          temperature: 0.7,
+          max_tokens: 150
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('OpenAI API error:', errorData);
+        throw new Error(`OpenAI API request failed: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error('Error calling OpenAI API:', error);
+      
+      // Fall back to our built-in response system on error
+      try {
+        const responseType = determineResponseType(userMessage);
+        const contextData = extractContextFromMessage(userMessage);
+        return getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
+      } catch (fallbackError) {
+        return "I'm having trouble connecting right now. Could you try asking about Deepak's skills, projects, or experience instead?";
+      }
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  // Send message to Dialogflow API
+  const sendToDialogflow = async (userMessage) => {
+    try {
+      setIsTyping(true);
+      
+      // Check if Dialogflow config exists
+      const projectId = import.meta.env.VITE_DIALOGFLOW_PROJECT_ID;
+      const location = import.meta.env.VITE_DIALOGFLOW_LOCATION || 'global';
+      const agentId = import.meta.env.VITE_DIALOGFLOW_AGENT_ID;
+      const endpoint = import.meta.env.VITE_DIALOGFLOW_API_ENDPOINT;
+      
+      if (!projectId || !agentId || projectId.includes('your_') || agentId.includes('your_')) {
+        console.warn('Dialogflow configuration is missing or not configured. Using fallback response system.');
+        // Use our built-in response system as a fallback
+        const responseType = determineResponseType(userMessage);
+        const contextData = extractContextFromMessage(userMessage);
+        const fallbackResponse = getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
+        
+        // Add a note about the configuration
+        return fallbackResponse + "\n\n(Note: I'm currently operating with limited capabilities as my Dialogflow connection isn't configured. Please set up Dialogflow in the .env file to enable full AI features.)";
+      }
+      
+      // For now, since proper Dialogflow authentication requires a backend service
+      // We'll use our fallback system instead
+      console.warn('Dialogflow integration requires backend authentication. Using fallback response system.');
+      const responseType = determineResponseType(userMessage);
+      const contextData = extractContextFromMessage(userMessage);
+      return getResponse(responseType !== 'default' ? responseType : 'greeting', contextData) + 
+             "\n\n(Note: For full Dialogflow integration, please implement proper authentication via a backend service.)";
+      
+      // Commented out Dialogflow implementation requiring authentication
+      /*
+      // Create a session ID (can be any string that identifies the conversation)
+      const sessionId = 'portfolio-session-' + Date.now();
+      
+      // Build request URL
+      const url = `${endpoint}/projects/${projectId}/locations/${location}/agents/${agentId}/sessions/${sessionId}:detectIntent`;
+      
+      // Make API request
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + await getDialogflowToken()
+        },
+        body: JSON.stringify({
+          queryInput: {
+            text: {
+              text: userMessage,
+              languageCode: 'en-US'
+            }
+          },
+          queryParams: {
+            contexts: [
+              {
+                name: 'portfolio-context',
+                lifespanCount: 5,
+                parameters: {
+                  data: JSON.stringify({
+                    name: 'Deepak Reddy',
+                    location: 'Chicago, IL',
+                    role: 'Software Developer'
+                  })
+                }
+              }
+            ]
+          }
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Dialogflow API error:', errorData);
+        throw new Error(`Dialogflow API request failed: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // Extract the fulfillment text from the response
+      return data.queryResult?.fulfillmentText || 
+             data.queryResult?.fulfillmentMessages?.[0]?.text?.text?.[0] || 
+             "I'm not sure how to respond to that.";
+      */
+    } catch (error) {
+      console.error('Error with Dialogflow response:', error);
+      // Fall back to our built-in response system
+      try {
+        const responseType = determineResponseType(userMessage);
+        const contextData = extractContextFromMessage(userMessage);
+        return getResponse(responseType !== 'default' ? responseType : 'greeting', contextData);
+      } catch (fallbackError) {
+        return "I'm having trouble right now. Could you try asking about Deepak's skills, projects, or experience instead?";
+      }
+    } finally {
+      setIsTyping(false);
+    }
+  };
+  
+  // Helper function to get an access token for Dialogflow
+  // This is a placeholder - in production, you would implement proper authentication
+  const getDialogflowToken = async () => {
+    // In a real implementation, you would retrieve a token using OAuth or a service account
+    // For browser environments, this typically requires a backend service to securely store credentials
+    
+    // Placeholder warning
+    console.warn('Dialogflow authentication not properly implemented. This will only work with proper backend authentication.');
+    
+    // Return a placeholder - this won't work until properly implemented
+    return 'placeholder_token';
+  };
+
+  // Check for predefined actions before calling the API
+  const checkPredefinedActions = (input) => {
+    const lowerInput = input.toLowerCase();
+    
+    if (lowerInput.includes('download resume') || lowerInput.includes('get resume')) {
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = '/resume.pdf'; // Path to resume in public folder
+      link.download = 'deepak_reddy_resume.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      return {
+        isAction: true,
+        response: "I've started downloading Deepak's resume for you. Check your downloads folder!"
+      };
+    }
+    
+    if (lowerInput.includes('contact deepak') || lowerInput.includes('send message')) {
+      setContactMode(true);
+      setContactStep(0);
+      
+      return {
+        isAction: true,
+        response: contactPrompts[0]
+      };
+    }
+    
+    if (lowerInput.includes('where is he based') || lowerInput.includes('location') || lowerInput.includes('where does deepak live')) {
+      return {
+        isAction: true,
+        response: "Deepak is currently based in Chicago, Illinois."
+      };
+    }
+    
+    return {
+      isAction: false
+    };
+  };
+  
+  // Enhanced handleSendMessage function with API integration
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
     
-    // Add user message
-    const userMessage = { id: messages.length + 1, type: 'user', text: inputValue };
-    setMessages(prev => [...prev, userMessage]);
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      text: inputValue.trim()
+    };
     
-    const userInput = inputValue;
+    setMessages(prevMessages => [...prevMessages, userMessage]);
     setInputValue('');
     
-    // Show typing indicator
+    // Process contact mode separately
+    if (contactMode) {
+      processContactInput(userMessage.text);
+      return;
+    }
+    
+    // Check for predefined actions first
+    const predefinedAction = checkPredefinedActions(userMessage.text);
+    
+    if (predefinedAction.isAction) {
+      // Display response for predefined action
+      setTimeout(() => {
+        setIsTyping(false);
+        
+        const botResponse = {
+          id: Date.now(),
+          type: 'bot',
+          text: predefinedAction.response
+        };
+        
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+      }, 800);
+      
+      return;
+    }
+    
+    // Try web search simulation for general knowledge questions
+    const webSearchResponse = simulateWebSearch(userMessage.text);
+    if (webSearchResponse) {
+      setTimeout(() => {
+        setIsTyping(false);
+        
+        const botResponse = {
+          id: Date.now(),
+          type: 'bot',
+          text: webSearchResponse
+        };
+        
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+      }, 1200);
+      
+      return;
+    }
+    
+    // Determine response type based on input text
+    const responseType = determineResponseType(userMessage.text);
+    if (responseType !== 'default') {
+      // If we have a predefined response category, use it
+      const contextData = extractContextFromMessage(userMessage.text);
+      const responseText = getResponse(responseType, contextData);
+      
+      setTimeout(() => {
+        setIsTyping(false);
+        
+        const botResponse = {
+          id: Date.now(),
+          type: 'bot',
+          text: responseText
+        };
+        
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+      }, 800);
+      
+      return;
+    }
+    
+    // If no predefined action or category, fallback to AI service
     setIsTyping(true);
     
-    setTimeout(() => {
-      setIsTyping(false);
+    try {
+      // Choose AI provider based on configuration
+      let aiResponse;
       
-      // Handle contact mode
-      if (contactMode) {
-        processContactInput(userInput);
-        return;
+      if (aiProvider === 'dialogflow') {
+        aiResponse = await sendToDialogflow(userMessage.text);
+      } else {
+        // Default to OpenAI
+        aiResponse = await sendToOpenAI(userMessage.text);
       }
       
-      // Check if this looks like a general knowledge question
-      const webSearchTerms = ["what is", "how does", "tell me about", "latest", "current", "trends", "news", "explain", "when was", "who is"];
-      const mightBeGeneralQuestion = webSearchTerms.some(term => userInput.toLowerCase().includes(term));
-      
-      // If it might be a general question, attempt to simulate web search
-      if (mightBeGeneralQuestion) {
-        const webResult = simulateWebSearch(userInput);
+      setTimeout(() => {
+        setIsTyping(false);
         
-        if (webResult) {
-          // Show a "searching" indicator before displaying results
-          setIsTyping(true);
-          
-          setTimeout(() => {
-            setIsTyping(false);
-            
-            // Add a message indicating the AI is searching the web
-            const searchingMessage = { 
-              id: messages.length + 2, 
-              type: 'bot', 
-              text: webResult
-            };
-            setMessages(prev => [...prev, searchingMessage]);
-          }, 1500 + Math.random() * 1000); // Slightly longer delay to simulate web search
-          
-          return;
-        }
-      }
-      
-      // Extract context from the user's message
-      const context = extractContextFromMessage(userInput);
-      
-      // Determine response for regular mode
-      const responseType = determineResponseType(userInput);
-      
-      // If user wants to contact, check if they're just asking for email
-      if (responseType === 'contact') {
-        // Check if user is just asking for email or wants to send a message
-        const lowerInput = userInput.toLowerCase();
-        const wantsToSendMessage = /send|message|get in touch|form|fill out|submit|contact form/i.test(lowerInput);
+        const botResponse = {
+          id: Date.now(),
+          type: 'bot',
+          text: aiResponse
+        };
         
-        if (wantsToSendMessage) {
-          // User wants to fill out contact form
-          setContactMode(true);
-          processContactInput(''); // Start the contact flow
-          return;
-        } else {
-          // User just wants the email, provide it directly
-          const botResponse = { 
-            id: messages.length + 2, 
-            type: 'bot', 
-            text: getRandomResponse('contact')
-          };
-          setMessages(prev => [...prev, botResponse]);
-          return;
-        }
-      }
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+      }, 800); // Small delay for typing effect
+    } catch (error) {
+      console.error("Error getting AI response:", error);
       
-      // Add bot response for regular mode using the enhanced getResponse function
-      const botResponse = { 
-        id: messages.length + 2, 
-        type: 'bot', 
-        text: getResponse(responseType, context)
-      };
-      
-      // If it's a resume request, add download button
-      if (responseType === 'resume') {
-        botResponse.action = 'resume';
-      }
-      
-      setMessages(prev => [...prev, botResponse]);
-    }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
+      setTimeout(() => {
+        setIsTyping(false);
+        
+        const botResponse = {
+          id: Date.now(),
+          type: 'bot',
+          text: "I'm having trouble connecting right now. Could you try again or ask something else?"
+        };
+        
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+      }, 800);
+    }
   };
   
   // Extract context from user message to provide more specific responses
@@ -1013,136 +1379,125 @@ export const AIChatBubble = ({ isDarkMode }) => {
     
     return context;
   };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
-    }
-  };
-
-  const handleOptionClick = (option) => {
-    // Add the selected option as a user message
-    const userMessage = { 
-      id: messages.length + 1, 
-      type: 'user', 
-      text: option.text 
-    };
-    setMessages(prev => [...prev, userMessage]);
+  
+  // Handle quick suggestion click
+  const handleSuggestionClick = (suggestion) => {
+    setInputValue(suggestion);
     
-    // Show typing indicator
-    setIsTyping(true);
-    
+    // Auto-submit after a brief delay
     setTimeout(() => {
-      setIsTyping(false);
-      
-      if (option.value === 'portfolio') {
-        // Send portfolio introduction message
-        const botResponse = { 
-          id: messages.length + 2, 
-          type: 'bot', 
-          text: "Great! I'd be happy to tell you about Deepak. What would you like to know about?\n\n• Skills & Technologies\n• Projects\n• Work Experience\n• Education\n\nOr you can ask me a specific question about Deepak's background or expertise."
-        };
-        setMessages(prev => [...prev, botResponse]);
-      } else if (option.value === 'contact') {
-        // Start contact form flow
-        setContactMode(true);
-        processContactInput('');
-      }
-    }, 1000);
+      handleSendMessage();
+    }, 300);
   };
 
   return (
-    <div className="fixed right-4 bottom-4 z-50">
-      {/* Chat Bubble */}
-      {!isOpen && (
-        <div 
-          onClick={toggleChat}
-          className={`flex items-center cursor-pointer transition-opacity duration-300 p-3 rounded-full ${
-            isDarkMode ? 'bg-gradient-to-r from-cyan-600 to-purple-600' : 'bg-gradient-to-r from-cyan-500 to-purple-500'
-          } shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300`}
-        >
-          <div className="mr-3">
-            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
-              <span className="text-2xl">🤖</span>
-            </div>
-          </div>
-          <div className={`text-white max-w-[180px]`}>
-            <p className="font-medium text-sm">Hi, I'm Deepu — Deepak's portfolio bot. Want to chat?</p>
-          </div>
+    <>
+      {/* Chat bubble button */}
+      <button
+        onClick={toggleChat}
+        className={`fixed bottom-6 right-6 flex items-center py-2 px-4 rounded-full shadow-lg z-40 ${
+          isDarkMode ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-blue-600 hover:bg-blue-700'
+        } text-white transition-all duration-300 transform hover:scale-105 ${
+          isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+        aria-label="Chat with Deepu"
+      >
+        <div className="w-8 h-8 rounded-full flex items-center justify-center mr-2 bg-white">
+          <span className="text-xl">🤖</span>
         </div>
-      )}
+        <span className="font-medium">Deepak's AI Assistant</span>
+        
+        {/* Glowing effect */}
+        <span className={`absolute -inset-0.5 rounded-full ${
+          isDarkMode ? 'bg-indigo-500' : 'bg-blue-500'
+        } opacity-30 blur-sm animate-pulse`}></span>
+      </button>
 
-      {/* Chat Modal */}
+      {/* Chat window */}
       {isOpen && (
-        <div className={`rounded-xl shadow-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'} w-80 md:w-96 overflow-hidden flex flex-col`} style={{ height: '500px', maxHeight: '80vh' }}>
-          {/* Chat Header */}
-          <div className={`p-4 ${isDarkMode ? 'bg-gradient-to-r from-cyan-700 to-purple-700' : 'bg-gradient-to-r from-cyan-500 to-purple-500'} text-white flex items-center justify-between`}>
+        <div className={`fixed bottom-24 right-6 w-80 sm:w-96 h-[480px] z-40 rounded-lg shadow-2xl overflow-hidden
+          ${isDarkMode ? 'bg-gray-900 border border-gray-700' : 'bg-white border border-gray-200'}
+          flex flex-col transition-all duration-300 ease-in-out animate-fade-in-up`}>
+          
+          {/* Chat header */}
+          <div className={`p-3 flex items-center justify-between ${
+            isDarkMode ? 'bg-gray-800 border-b border-gray-700' : 'bg-blue-600 text-white'
+          }`}>
             <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3">
-                <span className="text-xl">🤖</span>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-2 ${
+                isDarkMode ? 'bg-indigo-600' : 'bg-blue-700'
+              }`}>
+                <span className="text-lg">🤖</span>
               </div>
               <div>
-                <h3 className="font-semibold">Deepu</h3>
-                <p className="text-xs opacity-80">
-                  {contactMode ? "Contact Assistant" : "Portfolio Assistant"}
+                <h3 className="font-medium">Deepak's AI Assistant</h3>
+                <p className="text-xs opacity-75">
+                  Here to help with portfolio inquiries
                 </p>
               </div>
             </div>
-            <button 
-              onClick={toggleChat} 
-              className="text-white hover:text-gray-200 transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            
+            <div className="flex">
+              <button 
+                onClick={toggleChat}
+                className={`rounded-full p-1 hover:bg-opacity-30 ${
+                  isDarkMode ? 'hover:bg-gray-600' : 'hover:bg-blue-500'
+                }`}
+                aria-label="Close chat"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
           </div>
           
-          {/* Chat Messages */}
+          {/* Chat messages */}
           <div 
-            className={`flex-1 p-4 overflow-y-auto ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}
-            style={{ scrollBehavior: 'smooth' }}
+            className={`flex-1 p-3 overflow-y-auto ${
+              isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'
+            }`}
+            ref={messagesEndRef}
           >
+            {/* API Configuration Warning */}
+            {showConfigWarning && (
+              <div className={`mb-4 p-2 rounded-md ${
+                isDarkMode ? 'bg-yellow-900 border border-yellow-700' : 'bg-yellow-50 border border-yellow-200'
+              }`}>
+                <p className={`text-xs ${
+                  isDarkMode ? 'text-yellow-300' : 'text-yellow-800'
+                }`}>
+                  <span className="font-semibold">⚠️ Note:</span> I'm running in basic mode as no AI provider is configured. I'll use pre-programmed responses for now. For full AI capabilities, please configure OpenAI or Dialogflow API keys in the .env file.
+                </p>
+              </div>
+            )}
+            
             {messages.map((message) => (
               <div 
                 key={message.id} 
-                className={`mb-4 flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`mb-3 max-w-[85%] ${
+                  message.type === 'user' ? 'ml-auto' : 'mr-auto'
+                } animate-fade-in`}
               >
-                <div 
-                  className={`rounded-lg px-4 py-2 max-w-[85%] ${
-                    message.type === 'user' 
-                      ? `${isDarkMode ? 'bg-purple-600' : 'bg-purple-500'} text-white` 
-                      : `${isDarkMode ? 'bg-gray-700' : 'bg-white'} ${isDarkMode ? 'text-white' : 'text-gray-800'} shadow`
-                  }`}
-                >
-                  <p className="whitespace-pre-line">{message.text}</p>
+                <div className={`p-3 rounded-lg ${
+                  message.type === 'user' ? 
+                    (isDarkMode ? 'bg-indigo-600 text-white' : 'bg-blue-600 text-white') : 
+                    (isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800 border border-gray-200')
+                }`}>
+                  {message.text.split('\n').map((text, i) => (
+                    <p key={i} className={i > 0 ? 'mt-1' : ''}>{text}</p>
+                  ))}
                   
-                  {message.action === 'resume' && (
-                    <a 
-                      href="https://drive.google.com/file/d/1IyTVLQiJhc2-Z3C78y2diijVFG5_LiVV/view?usp=drive_link" 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`mt-2 inline-flex items-center justify-center w-full py-2 px-3 rounded-md ${
-                        isDarkMode ? 'bg-cyan-600 hover:bg-cyan-700' : 'bg-cyan-500 hover:bg-cyan-600'
-                      } text-white text-sm font-medium transition-colors`}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      View Resume
-                    </a>
-                  )}
-                  
-                  {message.options && message.options.length > 0 && (
-                    <div className="mt-3 space-y-2">
+                  {message.options && (
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {message.options.map((option, index) => (
                         <button
                           key={index}
                           onClick={() => handleOptionClick(option)}
-                          className={`w-full text-left py-2 px-3 rounded-md text-white text-sm font-medium transition-colors ${
-                            isDarkMode 
-                              ? 'bg-gray-600 hover:bg-gray-500' 
-                              : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600'
+                          className={`text-xs px-2 py-1 rounded-full mt-1 ${
+                            isDarkMode ? 
+                              'bg-gray-700 hover:bg-gray-600 text-white' : 
+                              'bg-gray-200 hover:bg-gray-300 text-gray-800'
                           }`}
                         >
                           {option.text}
@@ -1154,13 +1509,19 @@ export const AIChatBubble = ({ isDarkMode }) => {
               </div>
             ))}
             
+            {/* Typing indicator */}
             {isTyping && (
-              <div className="mb-4 flex justify-start">
-                <div className={`rounded-lg px-4 py-2 ${isDarkMode ? 'bg-gray-700' : 'bg-white'} ${isDarkMode ? 'text-white' : 'text-gray-800'} shadow`}>
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '200ms' }}></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '400ms' }}></div>
+              <div className="mb-3 max-w-[85%] mr-auto animate-fade-in">
+                <div className={`p-3 rounded-lg ${
+                  isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800 border border-gray-200'
+                }`}>
+                  <div className="flex items-center">
+                    <span className="text-sm opacity-75">{UI_TEXT.typing}</span>
+                    <span className="ml-2 flex">
+                      <span className="h-2 w-2 bg-current rounded-full mr-1 animate-bounce" style={{animationDelay: '0s'}}></span>
+                      <span className="h-2 w-2 bg-current rounded-full mr-1 animate-bounce" style={{animationDelay: '0.2s'}}></span>
+                      <span className="h-2 w-2 bg-current rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1169,36 +1530,37 @@ export const AIChatBubble = ({ isDarkMode }) => {
             <div ref={messagesEndRef} />
           </div>
           
-          {/* Chat Input */}
-          <div className={`p-3 border-t ${isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'} flex items-center`}>
+          {/* Chat input */}
+          <div className={`p-3 flex items-center ${
+            isDarkMode ? 'bg-gray-800 border-t border-gray-700' : 'bg-white border-t border-gray-200'
+          }`}>
             <input
               type="text"
               value={inputValue}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
-              placeholder={contactMode ? `Type your ${contactStep === 0 ? 'name' : contactStep === 1 ? 'email' : contactStep === 2 ? 'message' : 'yes/no'}...` : "Type a message..."}
-              className={`flex-1 py-2 px-3 rounded-full ${
-                isDarkMode 
-                  ? 'bg-gray-800 text-white border-gray-700 focus:ring-cyan-600' 
-                  : 'bg-gray-100 text-gray-800 border-gray-200 focus:ring-cyan-500'
-              } border focus:outline-none focus:ring-2`}
+              placeholder={UI_TEXT.inputPlaceholder}
+              className={`flex-1 p-2 rounded-l ${
+                isDarkMode ? 
+                  'bg-gray-700 text-white placeholder-gray-400 border-gray-600' : 
+                  'bg-gray-100 text-gray-800 placeholder-gray-500 border-gray-300'
+              } border focus:outline-none focus:ring-2 ${
+                isDarkMode ? 'focus:ring-indigo-500' : 'focus:ring-blue-500'
+              }`}
             />
             <button
               onClick={handleSendMessage}
-              disabled={!inputValue.trim()}
-              className={`ml-2 p-2 rounded-full ${
-                isDarkMode 
-                  ? 'bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700' 
-                  : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600'
-              } text-white disabled:opacity-50 transition-colors`}
+              className={`p-2 rounded-r ${
+                isDarkMode ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-blue-600 hover:bg-blue-700'
+              } text-white`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
               </svg>
             </button>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }; 

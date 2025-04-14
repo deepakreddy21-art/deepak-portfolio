@@ -1,5 +1,4 @@
 import { RevealOnScroll } from "../RevealOnScroll";
-import SkillsCube from "../SkillsCube";
 
 export const Testimonials = ({ isDarkMode }) => {
   const skillCategories = [
@@ -47,7 +46,7 @@ export const Testimonials = ({ isDarkMode }) => {
 
   return (
     <section id="skills" className={`pt-1 pb-12 md:pt-1 md:pb-20 px-4 relative ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
-      <div className={`absolute inset-0 ${isDarkMode ? 'bg-black' : 'bg-white'} opacity-90`}></div>
+      <div className={`absolute inset-0 ${isDarkMode ? 'bg-black' : 'bg-white'} opacity-100`}></div>
       <div className="max-w-6xl mx-auto relative z-10">
         <RevealOnScroll>
           <h2 className="text-5xl md:text-7xl font-bold mb-3 text-center">
@@ -56,11 +55,6 @@ export const Testimonials = ({ isDarkMode }) => {
           <p className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} text-lg mb-10 md:mb-16 max-w-3xl mx-auto`}>
             Expertise across various technologies and frameworks to build robust, scalable applications
           </p>
-          
-          {/* 3D Rotating Cube */}
-          <div className="mb-16">
-            <SkillsCube skillCategories={skillCategories} isDarkMode={isDarkMode} />
-          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {skillCategories.map((category, index) => (

@@ -23,7 +23,7 @@ export const MobileMenu = ({ menuOpen, setMenuOpen, isDarkMode }) => {
           About Me
         </a>
         <a
-          href="#testimonials"
+          href="#skills"
           className={`font-bold ${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 transition-colors`}
           onClick={() => setMenuOpen(false)}
         >

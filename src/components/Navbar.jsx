@@ -59,7 +59,7 @@ export const Navbar = ({ menuOpen, setMenuOpen, isDarkMode }) => {
               About Me
             </a>
             <a 
-              href="#testimonials" 
+              href="#skills" 
               className={`text-sm font-bold ${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} transition-colors`}
             >
               Skills

@@ -4,7 +4,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [history, setHistory] = useState([
-    { type: 'system', content: 'Welcome to DRK Terminal v1.0.0' },
+    { type: 'system', content: 'Welcome to DR Terminal v1.0.0' },
     { type: 'system', content: 'Type "help" to see available commands.' },
     { type: 'prompt', content: '$ ' }
   ]);
@@ -112,9 +112,10 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'output', content: '  contact           - Display contact information' },
           { type: 'output', content: '  whoami            - Display personal profile' },
           { type: 'output', content: '  download resume   - Download resume file' },
-          { type: 'output', content: '  search [keyword]  - Search portfolio content' },
           { type: 'output', content: '  stats             - Display portfolio statistics' },
           { type: 'output', content: '  email             - Show email contact or open mailto link' },
+          { type: 'output', content: '  theme             - Toggle between light/dark mode' },
+          { type: 'output', content: '  open [site]       - Open social media links in browser' },
           { type: 'output', content: '  exit              - Close the terminal' }
         ];
       }
@@ -219,69 +220,6 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
         return [{ type: 'error', content: `Unknown download option: ${args}` }];
       }
     },
-    'search': {
-      description: 'Search portfolio content',
-      execute: (args) => {
-        if (!args) {
-          return [{ type: 'error', content: 'search: missing search term' }];
-        }
-        
-        const keyword = args.toLowerCase();
-        const results = [];
-        
-        // Search in skills
-        let skillMatches = [];
-        Object.entries(data.skills).forEach(([category, skills]) => {
-          const matches = skills.filter(skill => skill.toLowerCase().includes(keyword));
-          if (matches.length > 0) {
-            skillMatches.push({ category, matches });
-          }
-        });
-        
-        // Search in projects
-        const projectMatches = data.projects.filter(project => 
-          project.name.toLowerCase().includes(keyword) || 
-          project.description.toLowerCase().includes(keyword) ||
-          project.technologies.some(tech => tech.toLowerCase().includes(keyword))
-        );
-        
-        // Search in experience
-        const experienceMatches = data.experience.filter(exp => 
-          exp.company.toLowerCase().includes(keyword) ||
-          exp.position.toLowerCase().includes(keyword)
-        );
-        
-        // Compile results
-        if (skillMatches.length === 0 && projectMatches.length === 0 && experienceMatches.length === 0) {
-          return [{ type: 'system', content: `No results found for: "${args}"` }];
-        }
-        
-        const output = [{ type: 'system', content: `SEARCH RESULTS FOR: "${args}"` }];
-        
-        if (skillMatches.length > 0) {
-          output.push({ type: 'system', content: '\nSKILLS:' });
-          skillMatches.forEach(({ category, matches }) => {
-            output.push({ type: 'output', content: `${category}: ${matches.join(', ')}` });
-          });
-        }
-        
-        if (projectMatches.length > 0) {
-          output.push({ type: 'system', content: '\nPROJECTS:' });
-          projectMatches.forEach(project => {
-            output.push({ type: 'output', content: `${project.name}: ${project.description}` });
-          });
-        }
-        
-        if (experienceMatches.length > 0) {
-          output.push({ type: 'system', content: '\nEXPERIENCE:' });
-          experienceMatches.forEach(exp => {
-            output.push({ type: 'output', content: `${exp.company}: ${exp.position} (${exp.period})` });
-          });
-        }
-        
-        return output;
-      }
-    },
     'stats': {
       description: 'Display portfolio statistics',
       execute: () => {
@@ -306,6 +244,61 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'system', content: 'EMAIL CONTACT:' },
           { type: 'output', content: `Email: ${data.contact.email}` },
           { type: 'output', content: 'Email client opened in new tab (if not, please check popup blocker)' }
+        ];
+      }
+    },
+    'theme': {
+      description: 'Toggle between light/dark mode',
+      execute: () => {
+        toggleDarkMode();
+        const newTheme = theme === 'dark' ? 'light' : 'dark';
+        
+        return [
+          { type: 'system', content: 'THEME CHANGED:' },
+          { type: 'output', content: `Switched to ${newTheme} mode` }
+        ];
+      }
+    },
+    'open': {
+      description: 'Open social media links in browser',
+      execute: (args) => {
+        if (!args) {
+          return [
+            { type: 'error', content: 'open: missing site name' },
+            { type: 'output', content: 'Available sites: github, linkedin, instagram, twitter, portfolio' }
+          ];
+        }
+        
+        const site = args.toLowerCase();
+        let url = '';
+        
+        switch(site) {
+          case 'github':
+            url = `https://${data.contact.github}`;
+            break;
+          case 'linkedin':
+            url = `https://${data.contact.linkedin}`;
+            break;
+          case 'instagram':
+            url = `https://${data.contact.instagram}`;
+            break;
+          case 'twitter':
+            url = `https://${data.contact.twitter}`;
+            break;
+          case 'portfolio':
+            url = `https://${data.profile.portfolioUrl}`;
+            break;
+          default:
+            return [
+              { type: 'error', content: `Unknown site: ${site}` },
+              { type: 'output', content: 'Available sites: github, linkedin, instagram, twitter, portfolio' }
+            ];
+        }
+        
+        window.open(url, '_blank');
+        return [
+          { type: 'system', content: 'OPENING LINK:' },
+          { type: 'output', content: `Opening ${site} in a new tab...` }
         ];
       }
     },
@@ -438,7 +431,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
                   <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
-                <span>Terminal - DRK Portfolio ({theme} mode)</span>
+                <span>Terminal - DR Portfolio ({theme} mode)</span>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
