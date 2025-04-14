@@ -41,6 +41,11 @@ export const Testimonials = ({ isDarkMode }) => {
       category: "Testing & QA",
       skills: ["JUnit", "Mockito", "PyTest", "Postman", "Selenium", "Rest-Assured", "TestNG", "Cucumber"],
       gradient: "from-sky-500 to-indigo-500"
+    },
+    {
+      category: "Other Technologies",
+      skills: ["Agile SDLC", "Scrum", "Kanban", "Waterfall", "JIRA", "Spark", "Splunk", "ELK Stack"],
+      gradient: "from-red-500 to-yellow-500"
     }
   ];
 
