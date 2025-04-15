@@ -7,7 +7,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
   const [history, setHistory] = useState([
     { type: 'system', content: 'Welcome to DR Terminal v1.0.0' },
     { type: 'system', content: 'Type "help" to see available commands.' },
-    { type: 'prompt', content: '$ ' }
+    { type: 'prompt', content: '> ' }
   ]);
   const [theme, setTheme] = useState(isDarkMode ? 'dark' : 'light');
   const inputRef = useRef(null);
@@ -345,12 +345,12 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     const [cmd, ...args] = command.trim().split(' ');
     
     // Add executed command to history
-    const newHistory = [...history, { type: 'command', content: `$ ${command}` }];
+    const newHistory = [...history, { type: 'command', content: `> ${command}` }];
     
     // Special case for "download resume" command
     if (cmd === 'download' && args[0] === 'resume') {
       const output = commands['download'].execute('resume');
-      setHistory([...newHistory, ...output, { type: 'prompt', content: '$ ' }]);
+      setHistory([...newHistory, ...output, { type: 'prompt', content: '> ' }]);
       setInput('');
       return;
     }
@@ -358,15 +358,15 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     // Process command
     if (commands[cmd]) {
       const output = commands[cmd].execute(args.join(' '));
-      setHistory([...newHistory, ...output, { type: 'prompt', content: '$ ' }]);
+      setHistory([...newHistory, ...output, { type: 'prompt', content: '> ' }]);
     } else if (cmd) {
       setHistory([
         ...newHistory,
         { type: 'error', content: `command not found: ${cmd}` },
-        { type: 'prompt', content: '$ ' }
+        { type: 'prompt', content: '> ' }
       ]);
     } else {
-      setHistory([...newHistory, { type: 'prompt', content: '$ ' }]);
+      setHistory([...newHistory, { type: 'prompt', content: '> ' }]);
     }
     
     // Clear input field
@@ -519,7 +519,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
               ...updatedHistory,
               { type: 'system', content: 'MESSAGE SENT:' },
               { type: 'output', content: 'Your message has been sent to Deepak. He will get back to you soon.' },
-              { type: 'prompt', content: '$ ' }
+              { type: 'prompt', content: '> ' }
             ]);
             // Reset collection state
             setCollectingMessage(false);
@@ -530,7 +530,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
             setHistory([
               ...updatedHistory,
               { type: 'error', content: 'Failed to send message. Please try again later or use the contact form.' },
-              { type: 'prompt', content: '$ ' }
+              { type: 'prompt', content: '> ' }
             ]);
             // Reset collection state
             setCollectingMessage(false);
@@ -538,7 +538,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           });
         } else if (input.toLowerCase() === 'n' || input.toLowerCase() === 'no') {
           updatedHistory.push({ type: 'output', content: 'Message cancelled.' });
-          updatedHistory.push({ type: 'prompt', content: '$ ' });
+          updatedHistory.push({ type: 'prompt', content: '> ' });
           // Reset collection state
           setCollectingMessage(false);
           setMessageStep(0);
@@ -605,7 +605,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
                 </div>
               ))}
               <div className="flex items-center">
-                <span className={styles.prompt}>{history[history.length - 1]?.content !== '$ ' ? '$ ' : ''}</span>
+                <span className={styles.prompt}>{history[history.length - 1]?.content !== '> ' ? '> ' : ''}</span>
                 <input
                   ref={inputRef}
                   type="text"
