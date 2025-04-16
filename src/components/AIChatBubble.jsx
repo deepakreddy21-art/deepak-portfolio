@@ -277,7 +277,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
       "Deepak's email is deepakreddyiitc1234@gmail.com. Feel free to reach out to him directly!"
     ],
     resume: [
-      "I'd be happy to help you get Deepak's resume! You can download it directly using the button below.",
+      "I'd be happy to help you view Deepak's resume! You can access it directly using the Resume button in the navigation bar, or I can open it in Google Drive for you now.",
     ],
     techStack: [
       `For the Data Visualization Dashboard, Deepak used:\n• Frontend: React, D3.js\n• Backend: Node.js\n• Database: MongoDB\n• Real-time updates: WebSockets`,
@@ -1335,17 +1335,12 @@ When answering questions about Deepak's education, always mention that he earned
     const lowerInput = input.toLowerCase();
     
     if (lowerInput.includes('download resume') || lowerInput.includes('get resume')) {
-      // Create a temporary link element
-      const link = document.createElement('a');
-      link.href = '/Deepak_JFS_Dev_5Years.pdf'; // Path to resume in public folder
-      link.download = 'Deepak_JFS_Dev_5Years.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Open Google Drive link in a new tab
+      window.open("https://drive.google.com/drive/folders/1aHfyNMSigQD--2Qcnf2YuyFYq9wM_4vy?usp=drive_link", "_blank");
       
       return {
         isAction: true,
-        response: "I've started downloading Deepak's resume for you. Check your downloads folder!"
+        response: "I've opened Deepak's resume in Google Drive for you. Check your browser tabs!"
       };
     }
     

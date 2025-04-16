@@ -121,7 +121,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
           { type: 'output', content: '  experience        - Show work experience' },
           { type: 'output', content: '  contact           - Display contact information' },
           { type: 'output', content: '  whoami            - Display personal profile' },
-          { type: 'output', content: '  download resume   - Download resume file' },
+          { type: 'output', content: '  download resume   - Open resume in Google Drive' },
           { type: 'output', content: '  stats             - Display portfolio statistics' },
           { type: 'output', content: '  email             - Show email contact or open mailto link' },
           { type: 'output', content: '  theme             - Toggle between light/dark mode' },
@@ -215,17 +215,12 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
       description: 'Download resume',
       execute: (args) => {
         if (args === 'resume') {
-          // Create a temporary link element
-          const link = document.createElement('a');
-          link.href = '/Deepak_JFS_Dev_5Years.pdf'; // Path to resume in public folder
-          link.download = 'Deepak_JFS_Dev_5Years.pdf';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          // Open Google Drive link in a new tab
+          window.open("https://drive.google.com/drive/folders/1aHfyNMSigQD--2Qcnf2YuyFYq9wM_4vy?usp=drive_link", "_blank");
           
           return [
-            { type: 'system', content: 'DOWNLOAD INITIATED:' },
-            { type: 'output', content: 'Resume download started...' }
+            { type: 'system', content: 'OPENING RESUME:' },
+            { type: 'output', content: 'Opening resume in Google Drive...' }
           ];
         }
         return [{ type: 'error', content: `Unknown download option: ${args}` }];

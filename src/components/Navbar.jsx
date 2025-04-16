@@ -84,22 +84,20 @@ export const Navbar = ({ menuOpen, setMenuOpen, isDarkMode }) => {
             </a>
             
             <a 
-              href="#"
+              href="https://drive.google.com/drive/folders/1aHfyNMSigQD--2Qcnf2YuyFYq9wM_4vy?usp=drive_link"
               onClick={(e) => {
+                // Open the Google Drive link in a new tab instead of downloading
                 e.preventDefault();
-                const link = document.createElement('a');
-                link.href = '/Deepak_JFS_Dev_5Years.pdf';
-                link.download = 'Deepak_JFS_Dev_5Years.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                window.open("https://drive.google.com/drive/folders/1aHfyNMSigQD--2Qcnf2YuyFYq9wM_4vy?usp=drive_link", "_blank");
                 return false;
               }}
               className="flex items-center space-x-1 text-sm font-medium px-4 py-2 rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 text-white transition-all hover:shadow-md"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <span>Resume</span>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
             </a>
           </div>
