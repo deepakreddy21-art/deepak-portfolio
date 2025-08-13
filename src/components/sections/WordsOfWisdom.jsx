@@ -43,7 +43,7 @@ export const WordsOfWisdom = ({ isDarkMode }) => {
         setFadeIn(true);
       }, 500); // This should match the CSS transition duration
       
-    }, 6000); // Change quote every 6 seconds
+    }, 3500); // Change quote every 3.5 seconds
     
     return () => clearInterval(intervalId);
   }, [quotes.length]);
