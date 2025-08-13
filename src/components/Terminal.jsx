@@ -87,7 +87,7 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     ],
     contact: {
       email: "deepakreddyiitc1234@gmail.com",
-      github: "github.com/deepakreddy21",
+      github: "github.com/deepakreddy21-art",
       linkedin: "linkedin.com/in/deepak-reddy-3a911924b",
       instagram: "instagram.com/deepakreddy_22",
       twitter: "twitter.com/kdr_9837"

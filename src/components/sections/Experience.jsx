@@ -3,8 +3,20 @@ import { RevealOnScroll } from "../RevealOnScroll";
 export const Experience = ({ isDarkMode }) => {
   const experiences = [
     {
+      company: "USAA",
+      period: "May 2025 - Present",
+      position: "Java Full Stack Developer",
+      gradient: "from-blue-500 to-green-500",
+      logo: "https://is3-ssl.mzstatic.com/image/thumb/Purple122/v4/b4/ff/6c/b4ff6cb4-53c3-55a6-b122-0d5b37072cb3/AppIcon-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-85-220.png/1200x630wa.png",
+      details: [
+        "Developing and maintaining enterprise Java applications with Spring Boot and microservices architecture",
+        "Implementing and managing AWS cloud infrastructure including EC2, S3, Lambda, and RDS services",
+        "Managing DevOps processes using GitLab CI/CD pipelines, Terraform for infrastructure as code, and container orchestration"
+      ]
+    },
+    {
       company: "AbbVie",
-      period: "Feb 2024 - Present",
+      period: "Feb 2024 - Jan 2025",
       position: "Java Full Stack Developer",
       gradient: "from-purple-500 to-indigo-500",
       logo: "https://1000logos.net/wp-content/uploads/2021/08/AbbVie-Logo.png",
