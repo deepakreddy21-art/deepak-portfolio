@@ -65,8 +65,13 @@ export const Terminal = ({ isDarkMode, portfolioData, toggleDarkMode }) => {
     ],
     experience: [
       {
+        company: "USAA",
+        period: "May 2025 - Present",
+        position: "Java Full Stack Developer"
+      },
+      {
         company: "AbbVie",
-        period: "Feb 2024 - Present",
+        period: "Feb 2024 - Jan 2025",
         position: "Java Full Stack Developer"
       },
       {

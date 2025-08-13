@@ -93,9 +93,19 @@ export const AIChatBubble = ({ isDarkMode }) => {
     },
     workExperience: [
       {
+        company: "USAA",
+        position: "Java Full Stack Developer",
+        duration: "May 2025 - Present",
+        responsibilities: [
+          "Developing and maintaining enterprise Java applications with Spring Boot and microservices architecture",
+          "Implementing and managing AWS cloud infrastructure including EC2, S3, Lambda, and RDS services",
+          "Managing DevOps processes using GitLab CI/CD pipelines, Terraform for infrastructure as code, and container orchestration"
+        ]
+      },
+      {
         company: "AbbVie",
         position: "Java Full Stack Developer",
-        duration: "Feb 2024 - Present",
+        duration: "Feb 2024 - Jan 2025",
         responsibilities: [
           "Developing and maintaining enterprise Java applications with Spring Boot",
           "Building responsive front-end interfaces using modern JavaScript frameworks",
@@ -182,7 +192,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
     socialMedia: {
       instagram: "deepakreddy_22",
       linkedin: "deepak-reddy-3a911924b",
-      github: "deepakreddy21",
+      github: "deepakreddy21-art",
       twitter: "kdr_9837"
     }
   };
@@ -270,7 +280,7 @@ export const AIChatBubble = ({ isDarkMode }) => {
       `Deepak earned his Master's degree in Information Technology and Management from Illinois Institute of Technology.`
     ],
     experience: [
-      `Deepak's work experience includes:\n\n• ${portfolioContent.workExperience[0].position} at ${portfolioContent.workExperience[0].company} (${portfolioContent.workExperience[0].duration})\n  - ${portfolioContent.workExperience[0].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[1].position} at ${portfolioContent.workExperience[1].company} (${portfolioContent.workExperience[1].duration})\n  - ${portfolioContent.workExperience[1].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[2].position} at ${portfolioContent.workExperience[2].company} (${portfolioContent.workExperience[2].duration})\n  - ${portfolioContent.workExperience[2].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[3].position} at ${portfolioContent.workExperience[3].company} (${portfolioContent.workExperience[3].duration})\n  - ${portfolioContent.workExperience[3].responsibilities.join('\n  - ')}\n\nWould you like to know more about a specific role?`,
+      `Deepak's work experience includes:\n\n• ${portfolioContent.workExperience[0].position} at ${portfolioContent.workExperience[0].company} (${portfolioContent.workExperience[0].duration})\n  - ${portfolioContent.workExperience[0].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[1].position} at ${portfolioContent.workExperience[1].company} (${portfolioContent.workExperience[1].duration})\n  - ${portfolioContent.workExperience[1].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[2].position} at ${portfolioContent.workExperience[2].company} (${portfolioContent.workExperience[2].duration})\n  - ${portfolioContent.workExperience[2].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[3].position} at ${portfolioContent.workExperience[3].company} (${portfolioContent.workExperience[3].duration})\n  - ${portfolioContent.workExperience[3].responsibilities.join('\n  - ')}\n\n• ${portfolioContent.workExperience[4].position} at ${portfolioContent.workExperience[4].company} (${portfolioContent.workExperience[4].duration})\n  - ${portfolioContent.workExperience[4].responsibilities.join('\n  - ')}\n\nWould you like to know more about a specific role?`,
     ],
     contact: [
       "You can contact Deepak directly at deepakreddyiitc1234@gmail.com. Do you need any other information?",
@@ -1147,22 +1157,27 @@ SKILLS:
 - Other: Agile SDLC, Scrum, Kanban, Waterfall, JIRA, Spark, Splunk, ELK Stack
 
 WORK EXPERIENCE:
-1. AbbVie (Feb 2024 - Present) - Java Full Stack Developer
+1. USAA (May 2025 - Present) - Java Full Stack Developer
+   - Developing and maintaining enterprise Java applications with Spring Boot and microservices architecture
+   - Implementing and managing AWS cloud infrastructure including EC2, S3, Lambda, and RDS services
+   - Managing DevOps processes using GitLab CI/CD pipelines, Terraform for infrastructure as code, and container orchestration
+   
+2. AbbVie (Feb 2024 - Jan 2025) - Java Full Stack Developer
    - Developing and maintaining enterprise Java applications with Spring Boot
    - Building responsive front-end interfaces using modern JavaScript frameworks
    - Led the migration of monolithic applications to microservices architecture, improving scalability and maintainability
    
-2. BMO Harris Bank (May 2023 - Jan 2024) - Java Full Stack Developer
+3. BMO Harris Bank (May 2023 - Jan 2024) - Java Full Stack Developer
    - Developed and maintained banking applications using Java, Spring, and Angular
    - Implemented RESTful APIs for financial data processing and transaction management
    - Collaborated with business stakeholders to translate requirements into technical solutions
    
-3. Airtel (Sep 2021 - Dec 2022) - Java Full Stack Developer
+4. Airtel (Sep 2021 - Dec 2022) - Java Full Stack Developer
    - Built and maintained telecommunications applications using Java and related technologies
    - Implemented front-end interfaces with React for customer-facing applications
    - Optimized database queries and enhanced application performance for high-traffic services
    
-4. CIBC Bank (Jun 2020 - Jun 2021) - Java Developer
+5. CIBC Bank (Jun 2020 - Jun 2021) - Java Developer
    - Developed banking software solutions using Java and Spring framework
    - Created and maintained database schemas, stored procedures, and queries
    - Implemented unit and integration tests to ensure application reliability
