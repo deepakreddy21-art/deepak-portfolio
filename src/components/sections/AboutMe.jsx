@@ -16,13 +16,13 @@ export const AboutMe = ({ isDarkMode }) => {
             <div className="space-y-6">
               <div className="space-y-4">
                 <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} text-base md:text-lg leading-relaxed`}>
-                  I'm a Results-Driven Java Full Stack Developer with over 4 years of hands-on experience building scalable web applications and cloud-native solutions. I specialize in designing robust backend architectures with Java, Spring Boot, and Microservices, and creating dynamic frontends using ReactJS, Angular, and TypeScript.
+                  I'm a Java Full Stack Developer with 5+ years of experience building scalable, cloud-native applications across finance, healthcare, and telecom. I specialize in Java 17, Spring Boot, microservices, and modern front-end frameworks like React, Angular, and TypeScript, delivering seamless, user-focused solutions that perform at scale.
                 </p>
                 <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} text-base md:text-lg leading-relaxed`}>
-                  Throughout my career, I've engineered CI/CD pipelines, implemented RESTful APIs, and built cloud-deployed applications on AWS, Azure, and GCP. I have strong expertise in containerization with Docker, orchestration with Kubernetes, and infrastructure automation using Terraform and Ansible.
+                  My work spans cloud migration, DevOps automation, and performance optimization, with proven results such as achieving 99.99% uptime, reducing release cycles by 80%, and improving application load times for millions of users. I'm skilled in deploying high-availability systems on AWS (Lambda, API Gateway, ECS, DynamoDB) and streamlining delivery through CI/CD pipelines using GitLab, Jenkins, and Terraform.
                 </p>
                 <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} text-base md:text-lg leading-relaxed`}>
-                  I earned my Master's in Information Technology and Management from the Illinois Institute of Technology, Chicago. I thrive in Agile teams, prioritize writing clean and testable code, and enjoy solving complex problems through innovation and technology.
+                  I hold a Master's in Information Technology and Management from the Illinois Institute of Technology, USA. Passionate about continuous learning, I thrive in Agile teams, mentor peers, and explore emerging cloud and automation technologies to push boundaries and deliver measurable impact.
                 </p>
               </div>
             </div>

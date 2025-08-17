@@ -3,9 +3,9 @@ import { RevealOnScroll } from "../RevealOnScroll";
 export const Projects = ({ isDarkMode }) => {
   const projects = [
     {
-      title: "Pharma Cloud Platform",
-      description: "Developed a cloud-based platform for pharmaceutical data management and analytics.",
-      technologies: ["Java", "Spring Boot", "AWS"],
+      title: "Uber Clone",
+      description: "Built a full-stack ride-sharing application with real-time location tracking, payment integration, and driver-rider matching system",
+      technologies: ["React", "Node.js", "MongoDB", "Socket.io"],
       gradient: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-50 to-cyan-50"
     },

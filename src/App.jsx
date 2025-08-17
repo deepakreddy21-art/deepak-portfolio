@@ -5,7 +5,6 @@ import { MobileMenu } from "./components/MobileMenu";
 import { Home } from "./components/sections/Home";
 import { AboutMe } from "./components/sections/AboutMe";
 import { Experience } from "./components/sections/Experience";
-import { Companies } from "./components/sections/Companies";
 import { Projects } from "./components/sections/Projects";
 import { Testimonials } from "./components/sections/Testimonials";
 import { Skills } from "./components/sections/Skills";
@@ -73,10 +72,6 @@ function App() {
       {/* Experience Section */}
       <Experience isDarkMode={isDarkMode} />
       <SectionSeparator variant="wave1" flip={true} isDarkMode={isDarkMode} />
-      
-      {/* Companies Section */}
-      <Companies isDarkMode={isDarkMode} />
-      <SectionSeparator variant="wave2" isDarkMode={isDarkMode} />
       
       {/* Projects Section */}
       <Projects isDarkMode={isDarkMode} />

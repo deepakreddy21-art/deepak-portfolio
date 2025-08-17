@@ -1,14 +1,55 @@
 import { RevealOnScroll } from "../RevealOnScroll";
 import { useEffect, useRef } from "react";
 
-export const Skills = () => {
+export const Skills = ({ isDarkMode }) => {
   const skillsRef = useRef(null);
 
-  const mainSkills = [
-    { name: "JavaScript", color: "bg-gray-800" },
-    { name: "React", color: "bg-gray-800" },
-    { name: "Node.js", color: "bg-gray-800" },
-    { name: "Three.js", color: "bg-gray-800" }
+  const skillCategories = [
+    {
+      category: "Frontend Development",
+      skills: [
+        { name: "React", icon: "⚛️", level: "Advanced" },
+        { name: "JavaScript", icon: "🟨", level: "Advanced" },
+        { name: "HTML5", icon: "🌐", level: "Advanced" },
+        { name: "CSS3", icon: "🎨", level: "Advanced" },
+        { name: "TailwindCSS", icon: "💨", level: "Advanced" },
+        { name: "TypeScript", icon: "🔷", level: "Intermediate" }
+      ],
+      gradient: "from-blue-500 to-cyan-500"
+    },
+    {
+      category: "Backend Development",
+      skills: [
+        { name: "Java", icon: "☕", level: "Expert" },
+        { name: "Spring Boot", icon: "🍃", level: "Expert" },
+        { name: "Node.js", icon: "🟢", level: "Advanced" },
+        { name: "Python", icon: "🐍", level: "Intermediate" },
+        { name: "Express.js", icon: "🚂", level: "Advanced" }
+      ],
+      gradient: "from-green-500 to-emerald-500"
+    },
+    {
+      category: "Database & Cloud",
+      skills: [
+        { name: "MongoDB", icon: "🍃", level: "Advanced" },
+        { name: "MySQL", icon: "🐬", level: "Advanced" },
+        { name: "AWS", icon: "☁️", level: "Intermediate" },
+        { name: "PostgreSQL", icon: "🐘", level: "Intermediate" },
+        { name: "Redis", icon: "🔴", level: "Intermediate" }
+      ],
+      gradient: "from-purple-500 to-pink-500"
+    },
+    {
+      category: "DevOps & Tools",
+      skills: [
+        { name: "Git", icon: "📚", level: "Advanced" },
+        { name: "Docker", icon: "🐳", level: "Intermediate" },
+        { name: "CI/CD", icon: "🔄", level: "Advanced" },
+        { name: "Terraform", icon: "🏗️", level: "Intermediate" },
+        { name: "Jenkins", icon: "🤖", level: "Intermediate" }
+      ],
+      gradient: "from-orange-500 to-red-500"
+    }
   ];
 
   return (
@@ -49,14 +90,41 @@ export const Skills = () => {
             </div>
           </div>
           
-          {/* Main Skills Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {mainSkills.map((skill, index) => (
-              <div
-                key={index}
-                className="bg-gray-800 rounded-lg p-6 md:p-8 text-center text-white font-bold text-2xl md:text-3xl hover:-translate-y-2 transition-transform duration-300 shadow-lg"
-              >
-                {skill.name}
+          {/* Categorized Skills Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
+            {skillCategories.map((category, index) => (
+              <div key={index} className="space-y-4">
+                <h3 className={`text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${category.gradient}`}>
+                  {category.category}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+                  {category.skills.map((skill, skillIndex) => (
+                    <div
+                      key={skillIndex}
+                      className={`${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-lg p-3 md:p-4 border shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}
+                    >
+                      <div className="text-center">
+                        <div className="text-2xl md:text-3xl mb-2">{skill.icon}</div>
+                        <div className={`font-semibold text-sm md:text-base ${
+                          skill.level === "Expert" ? "text-green-600" :
+                          skill.level === "Advanced" ? "text-blue-600" :
+                          skill.level === "Intermediate" ? "text-orange-600" :
+                          "text-gray-600"
+                        }`}>
+                          {skill.name}
+                        </div>
+                        <div className={`text-xs mt-1 px-2 py-1 rounded-full ${
+                          skill.level === "Expert" ? "bg-green-100 text-green-800" :
+                          skill.level === "Advanced" ? "bg-blue-100 text-blue-800" :
+                          skill.level === "Intermediate" ? "bg-orange-100 text-orange-800" :
+                          "bg-gray-100 text-gray-800"
+                        }`}>
+                          {skill.level}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
